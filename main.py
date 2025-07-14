@@ -1,6 +1,6 @@
 import tkinter as tk
 import os
-from app import *
+from app import PictoChatApp
 
 
 os.environ["SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"] = "0"
