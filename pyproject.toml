@@ -1,0 +1,15 @@
+[project]
+name = "pyctochat"
+version = "0.0.1"
+description = "Pictochat but make it Python"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pillow>=11.3.0",
+    "pygame>=2.6.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.12.3",
+]
