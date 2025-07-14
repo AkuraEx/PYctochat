@@ -7,23 +7,24 @@ from PIL import Image, ImageTk
 from config import *
 from drawing.draw import thick_aaline
 
+
 class PictoChatApp:
     def __init__(self, root):
         self.root = root
         self.root.title("PictoChat P2P")
-        self.root.geometry('576x576')
+        self.root.geometry("576x576")
 
         self.embed = tk.Frame(root, width=WINDOW_WIDTH, height=WINDOW_HEIGHT)
         self.embed.pack()
         self.embed.update()
 
-        os.environ['SDL_WINDOWID'] = str(self.embed.winfo_id())
+        os.environ["SDL_WINDOWID"] = str(self.embed.winfo_id())
 
         self.running = True
-        self.draw_color = (BLACK)
+        self.draw_color = BLACK
         self.thickness = LINE_THICKNESS
 
-        self.button_frame = tk.Frame(self.root, bg='white')
+        self.button_frame = tk.Frame(self.root, bg="white")
         self.button_frame.place(x=0, y=0, width=100, height=WINDOW_HEIGHT)
 
         self.clrIcon = PhotoImage(file="assets/pictochatlogo.png")
@@ -33,18 +34,30 @@ class PictoChatApp:
         self.moreIcon = PhotoImage(file="assets/more.png")
         self.lessIcon = PhotoImage(file="assets/less.png")
 
-        clrButton = ttk.Button(self.button_frame, text="Clear", command=self.clear, image=self.clrIcon)
-        clrButton.place(x = 5, y = 480)
-        quitButton = ttk.Button(self.button_frame, text="Quit", command=self.quit, image=self.quitIcon)
-        quitButton.place(x = 5, y = 0)
-        pencilButton = ttk.Button(self.button_frame, text="Pencil", command=self.pencil, image=self.pencilIcon)
-        pencilButton.place(x = 5, y = 300)
-        eraserButton = ttk.Button(self.button_frame, text="Eraser", command=self.eraser, image=self.eraserIcon)
-        eraserButton.place(x = 5, y = 340)
-        moreButton = ttk.Button(self.button_frame, text="More", command=self.more, image=self.moreIcon)
-        moreButton.place(x = 5, y = 400)
-        lessButton = ttk.Button(self.button_frame, text="Less", command=self.less, image=self.lessIcon)
-        lessButton.place(x = 5, y = 440)
+        clrButton = ttk.Button(
+            self.button_frame, text="Clear", command=self.clear, image=self.clrIcon
+        )
+        clrButton.place(x=5, y=480)
+        quitButton = ttk.Button(
+            self.button_frame, text="Quit", command=self.quit, image=self.quitIcon
+        )
+        quitButton.place(x=5, y=0)
+        pencilButton = ttk.Button(
+            self.button_frame, text="Pencil", command=self.pencil, image=self.pencilIcon
+        )
+        pencilButton.place(x=5, y=300)
+        eraserButton = ttk.Button(
+            self.button_frame, text="Eraser", command=self.eraser, image=self.eraserIcon
+        )
+        eraserButton.place(x=5, y=340)
+        moreButton = ttk.Button(
+            self.button_frame, text="More", command=self.more, image=self.moreIcon
+        )
+        moreButton.place(x=5, y=400)
+        lessButton = ttk.Button(
+            self.button_frame, text="Less", command=self.less, image=self.lessIcon
+        )
+        lessButton.place(x=5, y=440)
 
         pygame.init()
 
@@ -88,10 +101,12 @@ class PictoChatApp:
                     if self.last_pos:
                         x1, y1 = self.last_pos
                         pos1 = (x1, y1)
-                        thick_aaline(self.screen, self.draw_color, pos1, pos2, self.thickness)
+                        thick_aaline(
+                            self.screen, self.draw_color, pos1, pos2, self.thickness
+                        )
                     self.last_pos = (x2, y2)
                 else:
-                    self.last_pos = None 
+                    self.last_pos = None
 
         pygame.display.update()
         self.clock.tick(60)
