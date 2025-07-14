@@ -1,31 +1,31 @@
 import pygame
-from pygame.locals import *
 import os
 import tkinter as tk
 from tkinter import ttk, PhotoImage
-from PIL import Image, ImageTk
-from config import *
+import config as C
 from drawing.draw import thick_aaline
 
 
 class PictoChatApp:
-    def __init__(self, root):
+    def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("PictoChat P2P")
         self.root.geometry("576x576")
 
-        self.embed = tk.Frame(root, width=WINDOW_WIDTH, height=WINDOW_HEIGHT)
+        self.embed = tk.Frame(
+            root, width=C.WINDOW_WIDTH, height=C.WINDOW_HEIGHT
+        )
         self.embed.pack()
         self.embed.update()
 
         os.environ["SDL_WINDOWID"] = str(self.embed.winfo_id())
 
         self.running = True
-        self.draw_color = BLACK
-        self.thickness = LINE_THICKNESS
+        self.draw_color = C.BLACK
+        self.thickness = C.LINE_THICKNESS
 
         self.button_frame = tk.Frame(self.root, bg="white")
-        self.button_frame.place(x=0, y=0, width=100, height=WINDOW_HEIGHT)
+        self.button_frame.place(x=0, y=0, width=100, height=C.WINDOW_HEIGHT)
 
         self.clrIcon = PhotoImage(file="assets/pictochatlogo.png")
         self.quitIcon = PhotoImage(file="assets/close.png")
@@ -35,40 +35,61 @@ class PictoChatApp:
         self.lessIcon = PhotoImage(file="assets/less.png")
 
         clrButton = ttk.Button(
-            self.button_frame, text="Clear", command=self.clear, image=self.clrIcon
+            self.button_frame,
+            text="Clear",
+            command=self.clear,
+            image=self.clrIcon,
         )
         clrButton.place(x=5, y=480)
+
         quitButton = ttk.Button(
-            self.button_frame, text="Quit", command=self.quit, image=self.quitIcon
+            self.button_frame,
+            text="Quit",
+            command=self.quit,
+            image=self.quitIcon,
         )
         quitButton.place(x=5, y=0)
         pencilButton = ttk.Button(
-            self.button_frame, text="Pencil", command=self.pencil, image=self.pencilIcon
+            self.button_frame,
+            text="Pencil",
+            command=self.pencil,
+            image=self.pencilIcon,
         )
         pencilButton.place(x=5, y=300)
         eraserButton = ttk.Button(
-            self.button_frame, text="Eraser", command=self.eraser, image=self.eraserIcon
+            self.button_frame,
+            text="Eraser",
+            command=self.eraser,
+            image=self.eraserIcon,
         )
         eraserButton.place(x=5, y=340)
         moreButton = ttk.Button(
-            self.button_frame, text="More", command=self.more, image=self.moreIcon
+            self.button_frame,
+            text="More",
+            command=self.more,
+            image=self.moreIcon,
         )
         moreButton.place(x=5, y=400)
         lessButton = ttk.Button(
-            self.button_frame, text="Less", command=self.less, image=self.lessIcon
+            self.button_frame,
+            text="Less",
+            command=self.less,
+            image=self.lessIcon,
         )
         lessButton.place(x=5, y=440)
 
         pygame.init()
 
-        self.screen = pygame.display.set_mode((CANVAS_WIDTH, CANVAS_HEIGHT))
-        self.screen.fill(WHITE)
+        self.screen = pygame.display.set_mode(
+            (C.CANVAS_WIDTH, C.CANVAS_HEIGHT)
+        )
+        self.screen.fill(C.WHITE)
         self.clock = pygame.time.Clock()
 
         self.root.after(10, self.pygame_loop)
 
     def clear(self):
-        self.screen.fill(WHITE)
+        self.screen.fill(C.WHITE)
 
     def quit(self):
         self.running = False
@@ -76,16 +97,16 @@ class PictoChatApp:
         self.root.destroy()
 
     def pencil(self):
-        self.draw_color = BLACK
+        self.draw_color = C.BLACK
 
     def eraser(self):
-        self.draw_color = WHITE
+        self.draw_color = C.WHITE
 
     def more(self):
-        self.thickness = LINE_THICKNESS + 10
+        self.thickness = C.LINE_THICKNESS + 10
 
     def less(self):
-        self.thickness = LINE_THICKNESS
+        self.thickness = C.LINE_THICKNESS
 
     def pygame_loop(self):
         if not self.running:
@@ -102,7 +123,11 @@ class PictoChatApp:
                         x1, y1 = self.last_pos
                         pos1 = (x1, y1)
                         thick_aaline(
-                            self.screen, self.draw_color, pos1, pos2, self.thickness
+                            self.screen,
+                            self.draw_color,
+                            pos1,
+                            pos2,
+                            self.thickness,
                         )
                     self.last_pos = (x2, y2)
                 else:
