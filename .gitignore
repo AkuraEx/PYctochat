@@ -1,0 +1,12 @@
+# Partially based on https://github.com/github/gitignore/blob/main/Python.gitignore
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[codz]
+*$py.class
+
+# Virtual environment
+.venv/
+
+# Ruff
+.ruff_cache/
