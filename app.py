@@ -3,7 +3,7 @@ import os
 import tkinter as tk
 from tkinter import ttk, PhotoImage
 import config as C
-from drawing.draw import thick_aaline
+from drawing.canvas import Canvas
 
 
 class PictoChatApp:
@@ -21,8 +21,6 @@ class PictoChatApp:
         os.environ["SDL_WINDOWID"] = str(self.embed.winfo_id())
 
         self.running = True
-        self.draw_color = C.BLACK
-        self.thickness = C.LINE_THICKNESS
 
         self.button_frame = tk.Frame(self.root, bg="white")
         self.button_frame.place(x=0, y=0, width=100, height=C.WINDOW_HEIGHT)
@@ -78,18 +76,12 @@ class PictoChatApp:
         )
         lessButton.place(x=5, y=440)
 
-        pygame.init()
-
-        self.screen = pygame.display.set_mode(
-            (C.CANVAS_WIDTH, C.CANVAS_HEIGHT)
-        )
-        self.screen.fill(C.WHITE)
-        self.clock = pygame.time.Clock()
+        self.canvas = Canvas()
 
         self.root.after(10, self.pygame_loop)
 
     def clear(self):
-        self.screen.fill(C.WHITE)
+        self.canvas.clear()
 
     def quit(self):
         self.running = False
@@ -97,42 +89,19 @@ class PictoChatApp:
         self.root.destroy()
 
     def pencil(self):
-        self.draw_color = C.BLACK
+        self.canvas.color = C.BLACK
 
     def eraser(self):
-        self.draw_color = C.WHITE
+        self.canvas.color = C.WHITE
 
     def more(self):
-        self.thickness = C.LINE_THICKNESS + 10
+        self.canvas.thickness = C.LINE_THICKNESS + 5
 
     def less(self):
-        self.thickness = C.LINE_THICKNESS
+        self.canvas.thickness = C.LINE_THICKNESS
 
     def pygame_loop(self):
         if not self.running:
             return
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.quit()
-            elif event.type == pygame.MOUSEMOTION:
-                if pygame.mouse.get_pressed()[0]:
-                    x2, y2 = pygame.mouse.get_pos()
-                    pos2 = (x2, y2)
-                    if self.last_pos:
-                        x1, y1 = self.last_pos
-                        pos1 = (x1, y1)
-                        thick_aaline(
-                            self.screen,
-                            self.draw_color,
-                            pos1,
-                            pos2,
-                            self.thickness,
-                        )
-                    self.last_pos = (x2, y2)
-                else:
-                    self.last_pos = None
-
-        pygame.display.update()
-        self.clock.tick(60)
+        self.canvas.do_frame()
         self.root.after(10, self.pygame_loop)
