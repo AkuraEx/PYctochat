@@ -19,65 +19,76 @@ class PictoChatApp:
 
         self.running = True
 
-        self.button_frame = Frame(self.root, bg="white")
-        self.button_frame.place(x=0, y=0, width=100, height=C.WINDOW_HEIGHT)
-
-        self.clrIcon = PhotoImage(file="assets/pictochatlogo.png")
-        self.quitIcon = PhotoImage(file="assets/close.png")
-        self.pencilIcon = PhotoImage(file="assets/pencil.png")
-        self.eraserIcon = PhotoImage(file="assets/eraser.png")
-        self.moreIcon = PhotoImage(file="assets/more.png")
-        self.lessIcon = PhotoImage(file="assets/less.png")
-
-        clrButton = Button(
-            self.button_frame,
-            text="Clear",
-            command=self.clear,
-            image=self.clrIcon,
-        )
-        clrButton.place(x=5, y=480)
-
-        quitButton = Button(
-            self.button_frame,
-            text="Quit",
-            command=self.quit,
-            image=self.quitIcon,
-        )
-        quitButton.place(x=5, y=0)
-        pencilButton = Button(
-            self.button_frame,
-            text="Pencil",
-            command=self.pencil,
-            image=self.pencilIcon,
-        )
-        pencilButton.place(x=5, y=300)
-        eraserButton = Button(
-            self.button_frame,
-            text="Eraser",
-            command=self.eraser,
-            image=self.eraserIcon,
-        )
-        eraserButton.place(x=5, y=340)
-        moreButton = Button(
-            self.button_frame,
-            text="More",
-            command=self.more,
-            image=self.moreIcon,
-        )
-        moreButton.place(x=5, y=400)
-        lessButton = Button(
-            self.button_frame,
-            text="Less",
-            command=self.less,
-            image=self.lessIcon,
-        )
-        lessButton.place(x=5, y=440)
+        self._create_tools()
 
         self.canvas = PolygonCanvas(
             C.CANVAS, C.BLACK, C.WHITE, C.LINE_THICKNESS
         )
 
         self.root.after(10, self.pygame_loop)
+
+    def _load_assets(self):
+        self.icons: dict[str, PhotoImage] = {}
+        self.icons["clear"] = PhotoImage(file="assets/pictochatlogo.png")
+        self.icons["quit"] = PhotoImage(file="assets/close.png")
+        self.icons["pencil"] = PhotoImage(file="assets/pencil.png")
+        self.icons["eraser"] = PhotoImage(file="assets/eraser.png")
+        self.icons["more"] = PhotoImage(file="assets/more.png")
+        self.icons["less"] = PhotoImage(file="assets/less.png")
+
+    def _create_tools(self):
+        self._load_assets()
+
+        self.tools = Frame(self.root, bg="white")
+        self.tools.place(x=0, y=0, width=100, height=C.WINDOW_HEIGHT)
+
+        Button(
+            self.tools,
+            text="Clear",
+            command=self.clear,
+            image=self.icons["clear"],
+        ).place(x=5, y=480)
+
+        Button(
+            self.tools,
+            text="Quit",
+            command=self.quit,
+            image=self.icons["quit"],
+        ).place(x=5, y=0)
+
+        Button(
+            self.tools,
+            text="Save",
+            command=self.save,
+        ).place(x=5, y=60)
+
+        Button(
+            self.tools,
+            text="Pencil",
+            command=self.pencil,
+            image=self.icons["pencil"],
+        ).place(x=5, y=300)
+
+        Button(
+            self.tools,
+            text="Eraser",
+            command=self.eraser,
+            image=self.icons["eraser"],
+        ).place(x=5, y=340)
+
+        Button(
+            self.tools,
+            text="More",
+            command=self.more,
+            image=self.icons["more"],
+        ).place(x=5, y=400)
+
+        Button(
+            self.tools,
+            text="Less",
+            command=self.less,
+            image=self.icons["less"],
+        ).place(x=5, y=440)
 
     def clear(self):
         self.canvas.clear()
@@ -86,6 +97,10 @@ class PictoChatApp:
         self.running = False
         pygame.quit()
         self.root.destroy()
+
+    def save(self):
+        # TODO: Something with self.canvas.bytes()
+        pass
 
     def pencil(self):
         self.canvas.color = C.BLACK

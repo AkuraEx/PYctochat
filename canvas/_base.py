@@ -27,6 +27,9 @@ class BaseCanvas(ABC):
 
         self.clear()
 
+    def bytes(self):
+        return pygame.image.tostring(self.surface, "RGB")
+
     def clear(self) -> None:
         self.surface.fill(self.background)
 
