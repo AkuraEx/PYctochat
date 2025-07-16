@@ -3,7 +3,7 @@ import os
 import tkinter as tk
 from tkinter import ttk, PhotoImage
 import config as C
-from drawing.canvas import Canvas
+from canvas import PolygonCanvas
 
 
 class PictoChatApp:
@@ -76,7 +76,9 @@ class PictoChatApp:
         )
         lessButton.place(x=5, y=440)
 
-        self.canvas = Canvas()
+        self.canvas = PolygonCanvas(
+            C.CANVAS, C.BLACK, C.WHITE, C.LINE_THICKNESS
+        )
 
         self.root.after(10, self.pygame_loop)
 

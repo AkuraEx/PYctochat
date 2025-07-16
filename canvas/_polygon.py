@@ -1,30 +1,21 @@
 import pygame
-import config as C
+from canvas._base import BaseCanvas, RGBTuple
 import sys
 
 from pygame import Vector2, gfxdraw
 
 
-class Canvas:
-    color: tuple[int, int, int]
+class PolygonCanvas(BaseCanvas):
+    def __init__(
+        self,
+        size: tuple[int, int],
+        color: RGBTuple,
+        background: RGBTuple,
+        thickness: int,
+    ) -> None:
+        super().__init__(size, color, background, thickness)
 
-    def __init__(self):
-        pygame.init()
-
-        self.clock = pygame.time.Clock()
-
-        self.surface = pygame.display.set_mode(C.CANVAS)
-        self.clear()
-
-        self.thickness = C.LINE_THICKNESS
-        self.color = C.BLACK
-
-        self.mouse_down = False
-
-    def clear(self):
-        self.surface.fill(C.WHITE)
-
-    def draw_line(self, start: Vector2, end: Vector2):
+    def _draw_line(self, start: Vector2, end: Vector2):
         if start == end:
             return
 
@@ -46,8 +37,10 @@ class Canvas:
         gfxdraw.filled_polygon(self.surface, pts, self.color)
         gfxdraw.aapolygon(self.surface, pts, self.color)
 
-    def _draw_cap(self):
-        pos = pygame.mouse.get_pos()
+    def _draw_cap(self, pos: tuple[int, int]):
+        if self.last_pos:
+            self._draw_line(Vector2(self.last_pos), Vector2(pos))
+
         gfxdraw.filled_circle(
             self.surface, pos[0], pos[1], self.thickness, self.color
         )
@@ -55,29 +48,26 @@ class Canvas:
             self.surface, pos[0], pos[1], self.thickness, self.color
         )
 
-    def do_frame(self):
+    def _process_events(self):
         for event in pygame.event.get():
             match event.type:
                 case pygame.QUIT:
                     sys.exit()
                 case pygame.MOUSEBUTTONUP:
-                    self.mouse_down = False
-                    self._draw_cap()
+                    self._draw_cap(event.pos)
                 case pygame.MOUSEBUTTONDOWN:
-                    self.mouse_down = True
-                    self._draw_cap()
+                    self._draw_cap(event.pos)
+                    self.last_pos = event.pos
                 case _:
                     pass
 
-            if self.mouse_down:
-                end = pygame.mouse.get_pos()
-                if self.last_pos:
-                    start = self.last_pos
-                    self.draw_line(Vector2(start), Vector2(end))
-                self.last_pos = end
-            else:
-                self.last_pos = None
-                self.last_edge = None
-
-        pygame.display.update()
-        self.clock.tick()
+        # Once per frame, update the line if the mouse is still down
+        if pygame.mouse.get_pressed()[0]:
+            end = Vector2(pygame.mouse.get_pos())
+            if self.last_pos:
+                start = Vector2(self.last_pos)
+                self._draw_line(start, end)
+            self.last_pos = end
+        else:
+            self.last_pos = None
+            self.last_edge = None
