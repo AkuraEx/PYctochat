@@ -1,20 +1,17 @@
 import pygame
 import os
-import tkinter as tk
-from tkinter import ttk, PhotoImage
+from tkinter import Frame, Tk, PhotoImage, Button
 import config as C
 from canvas import PolygonCanvas
 
 
 class PictoChatApp:
-    def __init__(self, root: tk.Tk):
+    def __init__(self, root: Tk):
         self.root = root
         self.root.title("PictoChat P2P")
         self.root.geometry("576x576")
 
-        self.embed = tk.Frame(
-            root, width=C.WINDOW_WIDTH, height=C.WINDOW_HEIGHT
-        )
+        self.embed = Frame(root, width=C.WINDOW_WIDTH, height=C.WINDOW_HEIGHT)
         self.embed.pack()
         self.embed.update()
 
@@ -22,7 +19,7 @@ class PictoChatApp:
 
         self.running = True
 
-        self.button_frame = tk.Frame(self.root, bg="white")
+        self.button_frame = Frame(self.root, bg="white")
         self.button_frame.place(x=0, y=0, width=100, height=C.WINDOW_HEIGHT)
 
         self.clrIcon = PhotoImage(file="assets/pictochatlogo.png")
@@ -32,7 +29,7 @@ class PictoChatApp:
         self.moreIcon = PhotoImage(file="assets/more.png")
         self.lessIcon = PhotoImage(file="assets/less.png")
 
-        clrButton = ttk.Button(
+        clrButton = Button(
             self.button_frame,
             text="Clear",
             command=self.clear,
@@ -40,35 +37,35 @@ class PictoChatApp:
         )
         clrButton.place(x=5, y=480)
 
-        quitButton = ttk.Button(
+        quitButton = Button(
             self.button_frame,
             text="Quit",
             command=self.quit,
             image=self.quitIcon,
         )
         quitButton.place(x=5, y=0)
-        pencilButton = ttk.Button(
+        pencilButton = Button(
             self.button_frame,
             text="Pencil",
             command=self.pencil,
             image=self.pencilIcon,
         )
         pencilButton.place(x=5, y=300)
-        eraserButton = ttk.Button(
+        eraserButton = Button(
             self.button_frame,
             text="Eraser",
             command=self.eraser,
             image=self.eraserIcon,
         )
         eraserButton.place(x=5, y=340)
-        moreButton = ttk.Button(
+        moreButton = Button(
             self.button_frame,
             text="More",
             command=self.more,
             image=self.moreIcon,
         )
         moreButton.place(x=5, y=400)
-        lessButton = ttk.Button(
+        lessButton = Button(
             self.button_frame,
             text="Less",
             command=self.less,
