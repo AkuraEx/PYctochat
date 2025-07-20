@@ -9,7 +9,7 @@ class PictoChatApp:
     def __init__(self, root: Tk):
         self.root = root
         self.root.title("PictoChat P2P")
-        self.root.geometry("576x576")
+        self.root.geometry("1428x516")
 
         self.embed = Frame(root, width=C.WINDOW_WIDTH, height=C.WINDOW_HEIGHT)
         self.embed.pack()
@@ -27,6 +27,7 @@ class PictoChatApp:
 
         self.root.after(10, self.pygame_loop)
 
+
     def _load_assets(self):
         self.icons: dict[str, PhotoImage] = {}
         self.icons["clear"] = PhotoImage(file="assets/pictochatlogo.png")
@@ -41,7 +42,7 @@ class PictoChatApp:
         self._load_assets()
 
         self.tools = Frame(self.root, bg="white")
-        self.tools.place(x=0, y=0, width=100, height=C.WINDOW_HEIGHT)
+        self.tools.place(x=0, y=0, width=42, height=C.WINDOW_HEIGHT)
 
         Button(
             self.tools,

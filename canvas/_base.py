@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import pygame
 from helpers._stack import Stack
+import os
 
 type RGBTuple = tuple[int, int, int]
 
@@ -25,8 +26,10 @@ class BaseCanvas(ABC):
 
         self.clock = pygame.time.Clock()
         self.surface = pygame.display.set_mode(size)
+        self.back = pygame.transform.scale_by(pygame.image.load('assets/backSprite.png'), 3)
 
         self.clear()
+        self.surface.blit(self.back, (42, 0))
 
     def bytes(self):
         return pygame.image.tobytes(self.surface, "RGB")
@@ -34,6 +37,7 @@ class BaseCanvas(ABC):
     def clear(self) -> None:
         self.surface.fill(self.background)
         self.stack.reset()
+        self.surface.blit(self.back, (42, 0))
 
     def do_frame(self) -> None:
         self._process_events()
