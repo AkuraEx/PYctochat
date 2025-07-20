@@ -1,10 +1,14 @@
 import pygame
 from canvas._base import BaseCanvas, RGBTuple
 import sys
+from helpers._stack import stack
+import config as C
 
 from pygame import Vector2, gfxdraw
+from pygame.locals import *
 
 
+stack = stack()
 class PolygonCanvas(BaseCanvas):
     def __init__(
         self,
@@ -14,6 +18,7 @@ class PolygonCanvas(BaseCanvas):
         thickness: int,
     ) -> None:
         super().__init__(size, color, background, thickness)
+    
 
     def _draw_line(self, start: Vector2, end: Vector2):
         if start == end:
@@ -37,6 +42,8 @@ class PolygonCanvas(BaseCanvas):
         gfxdraw.filled_polygon(self.surface, pts, self.color)
         gfxdraw.aapolygon(self.surface, pts, self.color)
 
+        # stack.push([start, end])
+
     def _draw_cap(self, pos: tuple[int, int]):
         if self.last_pos:
             self._draw_line(Vector2(self.last_pos), Vector2(pos))
@@ -48,6 +55,14 @@ class PolygonCanvas(BaseCanvas):
             self.surface, pos[0], pos[1], self.thickness, self.color
         )
 
+    
+    def _undo(self):
+
+        if not stack.empty():
+            undone = pygame.image.frombytes(stack.pop(), (576, 576), "RGB")
+            self.surface.blit(undone, (0, 0))
+
+
     def _process_events(self):
         for event in pygame.event.get():
             match event.type:
@@ -56,10 +71,13 @@ class PolygonCanvas(BaseCanvas):
                 case pygame.MOUSEBUTTONUP:
                     self._draw_cap(event.pos)
                 case pygame.MOUSEBUTTONDOWN:
+                    stack.push(self.bytes())
                     self._draw_cap(event.pos)
                     self.last_pos = event.pos
                 case _:
                     pass
+        
+
 
         # Once per frame, update the line if the mouse is still down
         if pygame.mouse.get_pressed()[0]:

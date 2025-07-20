@@ -64,6 +64,12 @@ class PictoChatApp:
 
         Button(
             self.tools,
+            text="Undo",
+            command=self.undo,
+        ).place(x=5, y=60)
+
+        Button(
+            self.tools,
             text="Pencil",
             command=self.pencil,
             image=self.icons["pencil"],
@@ -101,6 +107,9 @@ class PictoChatApp:
     def save(self):
         # TODO: Something with self.canvas.bytes()
         pass
+
+    def undo(self):
+        self.canvas._undo()
 
     def pencil(self):
         self.canvas.color = C.BLACK

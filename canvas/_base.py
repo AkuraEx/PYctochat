@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import pygame
+from helpers._stack import stack
 
 type RGBTuple = tuple[int, int, int]
 
@@ -28,7 +29,7 @@ class BaseCanvas(ABC):
         self.clear()
 
     def bytes(self):
-        return pygame.image.tostring(self.surface, "RGB")
+        return pygame.image.tobytes(self.surface, "RGB")
 
     def clear(self) -> None:
         self.surface.fill(self.background)
