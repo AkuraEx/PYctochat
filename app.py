@@ -35,6 +35,7 @@ class PictoChatApp:
         self.icons["eraser"] = PhotoImage(file="assets/eraser.png")
         self.icons["more"] = PhotoImage(file="assets/more.png")
         self.icons["less"] = PhotoImage(file="assets/less.png")
+        self.icons["undo"] = PhotoImage(file="assets/undo.png")
 
     def _create_tools(self):
         self._load_assets()
@@ -66,6 +67,7 @@ class PictoChatApp:
             self.tools,
             text="Undo",
             command=self.undo,
+            image=self.icons["undo"],
         ).place(x=5, y=60)
 
         Button(

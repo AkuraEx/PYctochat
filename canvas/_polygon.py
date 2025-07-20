@@ -1,14 +1,13 @@
 import pygame
 from canvas._base import BaseCanvas, RGBTuple
 import sys
-from helpers._stack import stack
+from helpers._stack import Stack
 import config as C
 
 from pygame import Vector2, gfxdraw
 from pygame.locals import *
 
 
-stack = stack()
 class PolygonCanvas(BaseCanvas):
     def __init__(
         self,
@@ -42,8 +41,6 @@ class PolygonCanvas(BaseCanvas):
         gfxdraw.filled_polygon(self.surface, pts, self.color)
         gfxdraw.aapolygon(self.surface, pts, self.color)
 
-        # stack.push([start, end])
-
     def _draw_cap(self, pos: tuple[int, int]):
         if self.last_pos:
             self._draw_line(Vector2(self.last_pos), Vector2(pos))
@@ -56,12 +53,6 @@ class PolygonCanvas(BaseCanvas):
         )
 
     
-    def _undo(self):
-
-        if not stack.empty():
-            undone = pygame.image.frombytes(stack.pop(), (576, 576), "RGB")
-            self.surface.blit(undone, (0, 0))
-
 
     def _process_events(self):
         for event in pygame.event.get():
@@ -71,7 +62,7 @@ class PolygonCanvas(BaseCanvas):
                 case pygame.MOUSEBUTTONUP:
                     self._draw_cap(event.pos)
                 case pygame.MOUSEBUTTONDOWN:
-                    stack.push(self.bytes())
+                    self.stack.push(self.bytes())
                     self._draw_cap(event.pos)
                     self.last_pos = event.pos
                 case _:

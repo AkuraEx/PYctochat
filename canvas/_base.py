@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 import pygame
-from helpers._stack import stack
+from helpers._stack import Stack
 
 type RGBTuple = tuple[int, int, int]
-
 
 class BaseCanvas(ABC):
     color: RGBTuple
@@ -20,6 +19,7 @@ class BaseCanvas(ABC):
         self.color = color
         self.background = background
         self.thickness = thickness
+        self.stack = Stack()
 
         pygame.init()
 
@@ -33,11 +33,17 @@ class BaseCanvas(ABC):
 
     def clear(self) -> None:
         self.surface.fill(self.background)
+        self.stack.reset()
 
     def do_frame(self) -> None:
         self._process_events()
         pygame.display.update()
         self.clock.tick()
+
+    def _undo(self):
+        if not self.stack.empty():
+            undone = pygame.image.frombytes(self.stack.pop(), (576, 576), "RGB")
+            self.surface.blit(undone, (0, 0))
 
     @abstractmethod
     def _process_events(self) -> None:

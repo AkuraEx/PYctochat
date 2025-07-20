@@ -1,19 +1,20 @@
-
-class stack:
+class Stack:
   def __init__(self):
     self.stack = []
 
   def push(self, element):
+    if(self.size() > 100):
+      self.stack.pop(0)
     self.stack.append(element)
 
   def pop(self):
     if self.empty():
-      return "Stack is empty"
+      return None
     return self.stack.pop()
 
   def top(self):
     if self.empty():
-      return "Stack is empty"
+      return None
     return self.stack[-1]
 
   def empty(self):
@@ -23,4 +24,4 @@ class stack:
     return len(self.stack)
 
   def reset(self):
-    for item in self.stack: self.pop
+    self.stack.clear()
