@@ -57,6 +57,7 @@ class BaseCanvas(ABC):
     
     def _post(self):
         drawing = self.bytes()
+        
         self.postStack.push(drawing)
         self.clear()
         undone = pygame.image.frombytes(self.postStack.top(), (C.SCREEN_WIDTH, C.SCREEN_HEIGHT), "RGB")
