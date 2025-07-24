@@ -42,7 +42,7 @@ class PictoChatApp:
         self._load_assets()
 
         self.tools = Frame(self.root, bg="white")
-        self.tools.place(x=0, y=0, width=42, height=C.WINDOW_HEIGHT)
+        self.tools.place(x=0, y=0, width=C.FRAME_WIDTH, height=C.WINDOW_HEIGHT)
 
         Button(
             self.tools,

@@ -38,41 +38,49 @@ class PolygonCanvas(BaseCanvas):
         pts = start_edge + end_edge
 
         # Draw the rectangle
-        gfxdraw.filled_polygon(self.surface, pts, self.color)
-        gfxdraw.aapolygon(self.surface, pts, self.color)
+        gfxdraw.filled_polygon(self.drawSurface, pts, self.color)
+        gfxdraw.aapolygon(self.drawSurface, pts, self.color)
 
     def _draw_cap(self, pos: tuple[int, int]):
         if self.last_pos:
             self._draw_line(Vector2(self.last_pos), Vector2(pos))
 
         gfxdraw.filled_circle(
-            self.surface, pos[0], pos[1], self.thickness, self.color
+            self.drawSurface, pos[0], pos[1], self.thickness, self.color
         )
         gfxdraw.aacircle(
-            self.surface, pos[0], pos[1], self.thickness, self.color
+            self.drawSurface, pos[0], pos[1], self.thickness, self.color
         )
 
     
 
     def _process_events(self):
+        mousePos = pygame.mouse.get_pos()
+        inDrawWindow = mousePos[1] < C.WINDOW_HEIGHT / 2 and mousePos[0] < C.WINDOW_WIDTH / 2
+        inPostWindow = mousePos[1] > C.WINDOW_HEIGHT / 2
+
         for event in pygame.event.get():
             match event.type:
                 case pygame.QUIT:
                     sys.exit()
                 case pygame.MOUSEBUTTONUP:
-                    self._draw_cap(event.pos)
+                    if inDrawWindow:
+                        self._draw_cap(event.pos)
+                    elif inPostWindow:
+                        self._post()
                 case pygame.MOUSEBUTTONDOWN:
-                    self.stack.push(self.bytes())
-                    self._draw_cap(event.pos)
-                    self.last_pos = event.pos
+                    if inDrawWindow:
+                        self.lineStack.push(self.bytes())
+                        self._draw_cap(event.pos)
+                        self.last_pos = event.pos
                 case _:
                     pass
         
 
 
         # Once per frame, update the line if the mouse is still down
-        if pygame.mouse.get_pressed()[0]:
-            end = Vector2(pygame.mouse.get_pos())
+        if pygame.mouse.get_pressed()[0] and inDrawWindow:
+            end = Vector2(mousePos)
             if self.last_pos:
                 start = Vector2(self.last_pos)
                 self._draw_line(start, end)

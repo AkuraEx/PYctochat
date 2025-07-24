@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import pygame
 from helpers._stack import Stack
 import os
+import config as C
 
 type RGBTuple = tuple[int, int, int]
 
@@ -20,34 +21,47 @@ class BaseCanvas(ABC):
         self.color = color
         self.background = background
         self.thickness = thickness
-        self.stack = Stack()
+        self.lineStack = Stack()
+        self.postStack = Stack()
 
         pygame.init()
 
         self.clock = pygame.time.Clock()
-        self.surface = pygame.display.set_mode(size)
-        self.back = pygame.transform.scale_by(pygame.image.load('assets/backSprite.png'), 3)
+        self.mainDisplay = pygame.display.set_mode(size)
+        self.drawSurface = pygame.Surface((C.SCREEN_WIDTH, C.SCREEN_HEIGHT))
+
+        self.bottomScreen = pygame.transform.scale_by(pygame.image.load('assets/backSprite.png'), 3)
 
         self.clear()
-        self.surface.blit(self.back, (42, 0))
+
 
     def bytes(self):
-        return pygame.image.tobytes(self.surface, "RGB")
+        return pygame.image.tobytes(self.drawSurface, "RGB")
 
     def clear(self) -> None:
-        self.surface.fill(self.background)
-        self.stack.reset()
-        self.surface.blit(self.back, (42, 0))
+        self.lineStack.reset()
+        self.mainDisplay.fill(self.background)
+        self.mainDisplay.blit(self.bottomScreen, (C.FRAME_WIDTH, 0))
+        self.drawSurface.blit(self.bottomScreen, (0, 0))
 
     def do_frame(self) -> None:
         self._process_events()
+        self.mainDisplay.blit(self.drawSurface, (C.FRAME_WIDTH, 0))
         pygame.display.update()
         self.clock.tick()
 
     def _undo(self):
-        if not self.stack.empty():
-            undone = pygame.image.frombytes(self.stack.pop(), (1428, 516), "RGB")
-            self.surface.blit(undone, (0, 0))
+        if not self.lineStack.empty():
+            undone = pygame.image.frombytes(self.lineStack.pop(), (C.SCREEN_WIDTH, C.SCREEN_HEIGHT), "RGB")
+            self.drawSurface.blit(undone, (0, 0))
+    
+    def _post(self):
+        drawing = self.bytes()
+        self.postStack.push(drawing)
+        self.clear()
+        undone = pygame.image.frombytes(self.postStack.top(), (C.SCREEN_WIDTH, C.SCREEN_HEIGHT), "RGB")
+        self.mainDisplay.blit(undone, (C.SCREEN_WIDTH + C.FRAME_WIDTH, 0))
+
 
     @abstractmethod
     def _process_events(self) -> None:
