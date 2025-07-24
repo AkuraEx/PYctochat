@@ -46,7 +46,7 @@ class BaseCanvas(ABC):
 
     def _undo(self):
         if not self.stack.empty():
-            undone = pygame.image.frombytes(self.stack.pop(), (576, 576), "RGB")
+            undone = pygame.image.frombytes(self.stack.pop(), (1428, 516), "RGB")
             self.surface.blit(undone, (0, 0))
 
     @abstractmethod
