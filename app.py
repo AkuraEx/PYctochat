@@ -112,7 +112,7 @@ class PictoChatApp:
         pass
 
     def undo(self):
-        self.canvas._undo()
+        self.canvas.undo()
 
     def pencil(self):
         self.canvas.color = C.BLACK

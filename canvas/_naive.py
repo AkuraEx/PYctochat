@@ -20,8 +20,10 @@ class NaiveCanvas(BaseCanvas):
 
     def _circle_at_event(self, event: Event):
         x, y = event.pos
-        gfxdraw.filled_circle(self.surface, x, y, self.thickness, self.color)
-        gfxdraw.aacircle(self.surface, x, y, self.thickness, self.color)
+        gfxdraw.filled_circle(
+            self.draw_surface, x, y, self.thickness, self.color
+        )
+        gfxdraw.aacircle(self.draw_surface, x, y, self.thickness, self.color)
 
     def _process_events(self) -> None:
         for event in pygame.event.get():

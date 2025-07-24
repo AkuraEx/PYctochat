@@ -1,11 +1,9 @@
 import pygame
 from canvas._base import BaseCanvas, RGBTuple
 import sys
-from helpers._stack import Stack
 import config as C
 
 from pygame import Vector2, gfxdraw
-from pygame.locals import *
 
 
 class PolygonCanvas(BaseCanvas):
@@ -17,7 +15,6 @@ class PolygonCanvas(BaseCanvas):
         thickness: int,
     ) -> None:
         super().__init__(size, color, background, thickness)
-    
 
     def _draw_line(self, start: Vector2, end: Vector2):
         if start == end:
@@ -38,25 +35,26 @@ class PolygonCanvas(BaseCanvas):
         pts = start_edge + end_edge
 
         # Draw the rectangle
-        gfxdraw.filled_polygon(self.drawSurface, pts, self.color)
-        gfxdraw.aapolygon(self.drawSurface, pts, self.color)
+        gfxdraw.filled_polygon(self.draw_surface, pts, self.color)
+        gfxdraw.aapolygon(self.draw_surface, pts, self.color)
 
     def _draw_cap(self, pos: tuple[int, int]):
         if self.last_pos:
             self._draw_line(Vector2(self.last_pos), Vector2(pos))
 
         gfxdraw.filled_circle(
-            self.drawSurface, pos[0], pos[1], self.thickness, self.color
+            self.draw_surface, pos[0], pos[1], self.thickness, self.color
         )
         gfxdraw.aacircle(
-            self.drawSurface, pos[0], pos[1], self.thickness, self.color
+            self.draw_surface, pos[0], pos[1], self.thickness, self.color
         )
-
-    
 
     def _process_events(self):
         mousePos = pygame.mouse.get_pos()
-        inDrawWindow = mousePos[1] < C.WINDOW_HEIGHT / 2 and mousePos[0] < C.WINDOW_WIDTH / 2
+        inDrawWindow = (
+            mousePos[1] < C.WINDOW_HEIGHT / 2
+            and mousePos[0] < C.WINDOW_WIDTH / 2
+        )
         inPostWindow = mousePos[1] > C.WINDOW_HEIGHT / 2
 
         for event in pygame.event.get():
@@ -70,13 +68,11 @@ class PolygonCanvas(BaseCanvas):
                         self._post()
                 case pygame.MOUSEBUTTONDOWN:
                     if inDrawWindow:
-                        self.lineStack.push(self.bytes())
+                        self.line_stack.push(self.__bytes__())
                         self._draw_cap(event.pos)
                         self.last_pos = event.pos
                 case _:
                     pass
-        
-
 
         # Once per frame, update the line if the mouse is still down
         if pygame.mouse.get_pressed()[0] and inDrawWindow:
