@@ -63,20 +63,20 @@ class PolygonCanvas(BaseCanvas):
                     sys.exit()
                 case pygame.MOUSEBUTTONUP:
                     if inDrawWindow:
-                        self._draw_cap(event.pos)
+                        self._draw_cap(self._pos_to_rel(event.pos))
                     elif inPostWindow:
                         self._post()
                 case pygame.MOUSEBUTTONDOWN:
                     if inDrawWindow:
                         self.line_stack.push(self.__bytes__())
-                        self._draw_cap(event.pos)
-                        self.last_pos = event.pos
+                        self._draw_cap(self._pos_to_rel(event.pos))
+                        self.last_pos = self._pos_to_rel(event.pos)
                 case _:
                     pass
 
         # Once per frame, update the line if the mouse is still down
         if pygame.mouse.get_pressed()[0] and inDrawWindow:
-            end = Vector2(mousePos) - Vector2(C.FRAME_WIDTH, 0)
+            end = Vector2(self._pos_to_rel(mousePos))
             if self.last_pos:
                 start = Vector2(self.last_pos)
                 self._draw_line(start, end)

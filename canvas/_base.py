@@ -54,6 +54,9 @@ class BaseCanvas(ABC):
     def __bytes__(self):
         return pygame.image.tobytes(self.draw_surface, "RGB")
 
+    def _pos_to_rel(self, pos: tuple[int, int]):
+        return (pos[0] - C.FRAME_WIDTH, pos[1])
+
     def clear(self) -> None:
         self.line_stack.reset()
         self.draw_surface.blit(self.bottom_screen, (0, 0))
