@@ -26,7 +26,7 @@ class BaseCanvas(ABC):
         self.thickness = thickness
 
         self.line_stack = Stack()
-        self.post_list = [ ]
+        self.post_list = []
 
         pygame.init()
 
@@ -45,7 +45,9 @@ class BaseCanvas(ABC):
         self.main_display.fill(self.background)
         self.draw_surface.blit(self.back_drop, (0, 0))
         self.main_display.blit(self.back_drop, (C.FRAME_WIDTH, 0))
-        self.main_display.blit(self.back_drop, (C.SCREEN_WIDTH + C.FRAME_WIDTH, 0))
+        self.main_display.blit(
+            self.back_drop, (C.SCREEN_WIDTH + C.FRAME_WIDTH, 0)
+        )
         self.main_display.blit(self.bottom_screen, (C.FRAME_WIDTH, 0))
         self.clear()
 
@@ -74,7 +76,10 @@ class BaseCanvas(ABC):
         count = len(self.post_list) - 1
         for item in self.post_list:
             undone = pygame.image.frombytes(item, C.SCREEN, "RGB")
-            self.main_display.blit(undone, (C.SCREEN_WIDTH + C.FRAME_WIDTH, C.SCREEN_HEIGHT * count))
+            self.main_display.blit(
+                undone,
+                (C.SCREEN_WIDTH + C.FRAME_WIDTH, C.SCREEN_HEIGHT * count),
+            )
             count -= 1
         self.clear()
 
