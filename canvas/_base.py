@@ -26,7 +26,7 @@ class BaseCanvas(ABC):
         self.thickness = thickness
 
         self.line_stack = Stack()
-        self.post_stack = Stack()
+        self.post_list = [ ]
 
         pygame.init()
 
@@ -38,6 +38,15 @@ class BaseCanvas(ABC):
             pygame.image.load("assets/backSprite.png"), 3
         )
 
+        self.back_drop = pygame.transform.scale_by(
+            pygame.image.load("assets/backDrop.png"), 3
+        )
+
+        self.main_display.fill(self.background)
+        self.draw_surface.blit(self.back_drop, (0, 0))
+        self.main_display.blit(self.back_drop, (C.FRAME_WIDTH, 0))
+        self.main_display.blit(self.back_drop, (C.SCREEN_WIDTH + C.FRAME_WIDTH, 0))
+        self.main_display.blit(self.bottom_screen, (C.FRAME_WIDTH, 0))
         self.clear()
 
     def __bytes__(self):
@@ -45,8 +54,6 @@ class BaseCanvas(ABC):
 
     def clear(self) -> None:
         self.line_stack.reset()
-        self.main_display.fill(self.background)
-        self.main_display.blit(self.bottom_screen, (C.FRAME_WIDTH, 0))
         self.draw_surface.blit(self.bottom_screen, (0, 0))
 
     def do_frame(self) -> None:
@@ -62,11 +69,14 @@ class BaseCanvas(ABC):
 
     def _post(self) -> None:
         drawing = bytes(self)
-        self.post_stack.push(drawing)
-        self.clear()
+        self.post_list.append(drawing)
 
-        undone = pygame.image.frombytes(drawing, C.SCREEN, "RGB")
-        self.main_display.blit(undone, (C.SCREEN_WIDTH + C.FRAME_WIDTH, 0))
+        count = len(self.post_list) - 1
+        for item in self.post_list:
+            undone = pygame.image.frombytes(item, C.SCREEN, "RGB")
+            self.main_display.blit(undone, (C.SCREEN_WIDTH + C.FRAME_WIDTH, C.SCREEN_HEIGHT * count))
+            count -= 1
+        self.clear()
 
     @abstractmethod
     def _process_events(self) -> None:

@@ -9,7 +9,7 @@ class PictoChatApp:
     def __init__(self, root: Tk):
         self.root = root
         self.root.title("PictoChat P2P")
-        self.root.geometry("1428x516")
+        self.root.geometry(C.GEOMETRY)
 
         self.embed = Frame(root, width=C.WINDOW_WIDTH, height=C.WINDOW_HEIGHT)
         self.embed.pack()
