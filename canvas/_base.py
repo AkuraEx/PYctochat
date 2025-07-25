@@ -12,7 +12,7 @@ class BaseCanvas(ABC):
     thickness: int
 
     line_stack: Stack[bytes]
-    post_stack: Stack[bytes]
+    post_list: list[bytes]
 
     def __init__(
         self,
