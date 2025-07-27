@@ -55,7 +55,10 @@ class PolygonCanvas(BaseCanvas):
             mousePos[1] < C.WINDOW_HEIGHT / 2
             and mousePos[0] < C.WINDOW_WIDTH / 2
         )
-        inPostWindow = mousePos[1] > C.WINDOW_HEIGHT / 2
+        inPostWindow = (mousePos[1] > C.WINDOW_HEIGHT / 2
+                        and mousePos[0] < C.WINDOW_WIDTH / 2
+        )
+        inHistoryWindow = mousePos[0] > C.WINDOW_WIDTH / 2
 
         for event in pygame.event.get():
             match event.type:
@@ -64,13 +67,24 @@ class PolygonCanvas(BaseCanvas):
                 case pygame.MOUSEBUTTONUP:
                     if inDrawWindow:
                         self._draw_cap(self._pos_to_rel(event.pos))
-                    elif inPostWindow:
-                        self._post()
+                    elif inPostWindow and event.button == 1:
+                        drawing = bytes(self)
+                        self.post_list.appendleft((drawing, (C.SCREEN)))
+                        self.scroll_distance = 0
+                        self.draw_posts()
                 case pygame.MOUSEBUTTONDOWN:
                     if inDrawWindow:
                         self.line_stack.push(self.__bytes__())
                         self._draw_cap(self._pos_to_rel(event.pos))
                         self.last_pos = self._pos_to_rel(event.pos)
+                    # Scroll down button is 4
+                    if inHistoryWindow and event.button == 4:
+                        self.scroll_distance += 15
+                        self.draw_posts()
+                    # Scroll down button is 5
+                    elif inHistoryWindow and event.button == 5:
+                        self.scroll_distance -= 15
+                        self.draw_posts()
                 case _:
                     pass
 
