@@ -84,8 +84,6 @@ class BaseCanvas(ABC):
             self.draw_surface.blit(undone, (0, 0))
 
     def draw_posts(self) -> None:
-        n = len(self.post_list) - 1
-        count = n + 1
         x_pos = C.SCREEN_WIDTH + C.FRAME_WIDTH
         y_pos = C.CANVAS_HEIGHT + self.scroll_distance
         self.clear()
@@ -100,7 +98,6 @@ class BaseCanvas(ABC):
                     undone,
                     (x_pos, y_pos),
                 )
-            count += 1
     
 
     @abstractmethod
