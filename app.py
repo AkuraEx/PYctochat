@@ -1,8 +1,13 @@
+from tkinter.ttk import Separator
 import pygame
 import os
-from tkinter import Frame, Tk, PhotoImage, Button
+from tkinter import Frame, Tk
 import config as C
 from canvas import PolygonCanvas
+from widgets.chat import Chat
+from widgets.embed import Embed
+from widgets.tools import Tools
+from widgets.keyboard import Keyboard
 
 
 class PictoChatApp:
@@ -11,93 +16,26 @@ class PictoChatApp:
         self.root.title("PictoChat P2P")
         self.root.geometry(C.GEOMETRY)
 
-        self.embed = Frame(root, width=C.WINDOW_WIDTH, height=C.WINDOW_HEIGHT)
-        self.embed.pack()
-        self.embed.update()
+        self.embed = Embed(root, width=C.SCREEN_WIDTH, height=C.SCREEN_HEIGHT)
 
         os.environ["SDL_WINDOWID"] = str(self.embed.winfo_id())
 
         self.running = True
 
-        self._create_tools()
+        self.tools = Tools(root, self)
+        self.chat = Chat(root)
+        self.keyboard = Keyboard(root)
 
-        self.canvas = PolygonCanvas(
-            C.CANVAS, C.BLACK, C.WHITE, C.LINE_THICKNESS
-        )
+        self.tools.pack(side="left", fill="y", expand=False, padx=10, pady=10)
+        self.embed.pack(side="top", anchor="nw")
+        self.keyboard.pack(side="bottom", anchor="sw")
+        self.chat.pack(side="right", fill="y")
+
+        self.embed.update()
+
+        # self.canvas = PolygonCanvas(C.CANVAS, C.BLACK, C.WHITE, C.LINE_THICKNESS)
 
         self.root.after(10, self.pygame_loop)
-
-
-    def _load_assets(self):
-        self.icons: dict[str, PhotoImage] = {}
-        self.icons["clear"] = PhotoImage(file="assets/pictochatlogo.png")
-        self.icons["quit"] = PhotoImage(file="assets/close.png")
-        self.icons["pencil"] = PhotoImage(file="assets/pencil.png")
-        self.icons["eraser"] = PhotoImage(file="assets/eraser.png")
-        self.icons["more"] = PhotoImage(file="assets/more.png")
-        self.icons["less"] = PhotoImage(file="assets/less.png")
-        self.icons["undo"] = PhotoImage(file="assets/undo.png")
-
-    def _create_tools(self):
-        self._load_assets()
-
-        self.tools = Frame(self.root, bg="white")
-        self.tools.place(x=0, y=0, width=C.FRAME_WIDTH, height=C.WINDOW_HEIGHT)
-
-        Button(
-            self.tools,
-            text="Clear",
-            command=self.clear,
-            image=self.icons["clear"],
-        ).place(x=5, y=480)
-
-        Button(
-            self.tools,
-            text="Quit",
-            command=self.quit,
-            image=self.icons["quit"],
-        ).place(x=5, y=0)
-
-        Button(
-            self.tools,
-            text="Save",
-            command=self.save,
-        ).place(x=5, y=60)
-
-        Button(
-            self.tools,
-            text="Undo",
-            command=self.undo,
-            image=self.icons["undo"],
-        ).place(x=5, y=60)
-
-        Button(
-            self.tools,
-            text="Pencil",
-            command=self.pencil,
-            image=self.icons["pencil"],
-        ).place(x=5, y=300)
-
-        Button(
-            self.tools,
-            text="Eraser",
-            command=self.eraser,
-            image=self.icons["eraser"],
-        ).place(x=5, y=340)
-
-        Button(
-            self.tools,
-            text="More",
-            command=self.more,
-            image=self.icons["more"],
-        ).place(x=5, y=400)
-
-        Button(
-            self.tools,
-            text="Less",
-            command=self.less,
-            image=self.icons["less"],
-        ).place(x=5, y=440)
 
     def clear(self):
         self.canvas.clear()
