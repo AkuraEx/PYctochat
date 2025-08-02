@@ -1,8 +1,7 @@
-from tkinter import Button, Frame, Label, Misc, PhotoImage
-from app import Separator
-import config as C
+from tkinter import Button, Frame, Misc, PhotoImage
 
-from typing import TYPE_CHECKING
+from tkinter.ttk import Separator
+from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
     from app import PictoChatApp
@@ -14,6 +13,7 @@ class Tools(Frame):
     ):
         super().__init__(master, *args, **kwargs)
 
+        #  Load icons
         self.icons: dict[str, PhotoImage] = {}
         self.icons["clear"] = PhotoImage(file="assets/pictochatlogo.png")
         self.icons["quit"] = PhotoImage(file="assets/close.png")
@@ -23,35 +23,17 @@ class Tools(Frame):
         self.icons["less"] = PhotoImage(file="assets/less.png")
         self.icons["undo"] = PhotoImage(file="assets/undo.png")
 
-        clear = Button(
-            self, text="Clear", command=app.clear, image=self.icons["clear"]
-        )
+        # Register buttons
+        clear = self._register_button("Clear", app.clear, "clear")
+        quit = self._register_button("Quit", app.quit, "quit")
+        save = self._register_button("Save", app.save)
+        undo = self._register_button("Undo", app.undo, "undo")
+        pencil = self._register_button("Pencil", app.pencil, "pencil")
+        eraser = self._register_button("Eraser", app.eraser, "eraser")
+        more = self._register_button("More", app.more, "more")
+        less = self._register_button("Less", app.less, "less")
 
-        quit = Button(
-            self, text="Quit", command=app.quit, image=self.icons["quit"]
-        )
-
-        save = Button(self, text="Save", command=app.save)
-
-        undo = Button(
-            self, text="Undo", command=app.undo, image=self.icons["undo"]
-        )
-
-        pencil = Button(
-            self, text="Pencil", command=app.pencil, image=self.icons["pencil"]
-        )
-
-        eraser = Button(
-            self, text="Eraser", command=app.eraser, image=self.icons["eraser"]
-        )
-
-        more = Button(
-            self, text="More", command=app.more, image=self.icons["more"]
-        )
-        less = Button(
-            self, text="Less", command=app.less, image=self.icons["less"]
-        )
-
+        # Pack them
         quit.pack()
         Separator(self, orient="horizontal").pack(fill="x", expand=True)
         undo.pack()
@@ -64,3 +46,22 @@ class Tools(Frame):
         less.pack()
         Separator(self, orient="horizontal").pack(fill="x", expand=True)
         clear.pack()
+
+    def _register_button(
+        self,
+        text: str,
+        command: Callable[[], None],
+        image_name: str | None = None,
+    ) -> Button:
+        if image_name:
+            return Button(
+                self,
+                text=text,
+                command=command,
+                image=self.icons[image_name],
+            )
+        return Button(
+            self,
+            text=text,
+            command=command,
+        )

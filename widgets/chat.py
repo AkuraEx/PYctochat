@@ -1,15 +1,27 @@
-from tkinter import Frame, Label, Misc, PhotoImage
+from tkinter import (
+    Frame,
+    Label,
+    Misc,
+    PhotoImage,
+)
+from PIL import ImageTk
+import config as C
+
+type AnyPhotoImage = PhotoImage | ImageTk.PhotoImage
 
 
 class Chat(Frame):
     def __init__(self, master: Misc | None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
-        self.label = Label(self, text="Chat")
-        self.label.pack(side="top")
+        self.messages: list[AnyPhotoImage] = []
+        self.labels: list[Label] = []
 
-        self.messages: list[PhotoImage] = []
+        self.add_image(PhotoImage(file="assets/welcome.png"))
 
-    def add_image(self, data: bytes):
-        image = PhotoImage(master=self, data=data)
+    def add_image(self, image: AnyPhotoImage):
+        assert image.width() == C.CHAT_WIDTH
         self.messages.append(image)
+
+        label = Label(self, image=self.messages[-1])
+        label.pack()

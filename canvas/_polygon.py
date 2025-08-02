@@ -35,62 +35,39 @@ class PolygonCanvas(BaseCanvas):
         pts = start_edge + end_edge
 
         # Draw the rectangle
-        gfxdraw.filled_polygon(self.draw_surface, pts, self.color)
-        gfxdraw.aapolygon(self.draw_surface, pts, self.color)
+        gfxdraw.filled_polygon(self.surface, pts, self.color)
+        gfxdraw.aapolygon(self.surface, pts, self.color)
 
     def _draw_cap(self, pos: tuple[int, int]):
         if self.last_pos:
             self._draw_line(Vector2(self.last_pos), Vector2(pos))
 
         gfxdraw.filled_circle(
-            self.draw_surface, pos[0], pos[1], self.thickness, self.color
+            self.surface, pos[0], pos[1], self.thickness, self.color
         )
         gfxdraw.aacircle(
-            self.draw_surface, pos[0], pos[1], self.thickness, self.color
+            self.surface, pos[0], pos[1], self.thickness, self.color
         )
 
     def _process_events(self):
-        mousePos = pygame.mouse.get_pos()
-        inDrawWindow = (
-            mousePos[1] < C.WINDOW_HEIGHT / 2
-            and mousePos[0] < C.WINDOW_WIDTH / 2
-        )
-        inPostWindow = (mousePos[1] > C.WINDOW_HEIGHT / 2
-                        and mousePos[0] < C.WINDOW_WIDTH / 2
-        )
-        inHistoryWindow = mousePos[0] > C.WINDOW_WIDTH / 2
+        mouse_pos = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
             match event.type:
                 case pygame.QUIT:
                     sys.exit()
                 case pygame.MOUSEBUTTONUP:
-                    if inDrawWindow:
-                        self._draw_cap(self._pos_to_rel(event.pos))
-                    elif inPostWindow and event.button == 1:
-                        drawing = bytes(self)
-                        self.post_list.appendleft((drawing, (C.SCREEN)))
-                        self.scroll_distance = 0
-                        self.draw_posts()
+                    self._draw_cap(event.pos)
                 case pygame.MOUSEBUTTONDOWN:
-                    if inDrawWindow:
-                        self.line_stack.push(self.__bytes__())
-                        self._draw_cap(self._pos_to_rel(event.pos))
-                        self.last_pos = self._pos_to_rel(event.pos)
-                    # Scroll down button is 4
-                    if inHistoryWindow and event.button == 4:
-                        self.scroll_distance += 15
-                        self.draw_posts()
-                    # Scroll down button is 5
-                    elif inHistoryWindow and event.button == 5:
-                        self.scroll_distance -= 15
-                        self.draw_posts()
+                    self.history.push(bytes(self))
+                    self._draw_cap(event.pos)
+                    self.last_pos = event.pos
                 case _:
                     pass
 
         # Once per frame, update the line if the mouse is still down
-        if pygame.mouse.get_pressed()[0] and inDrawWindow:
-            end = Vector2(self._pos_to_rel(mousePos))
+        if pygame.mouse.get_pressed()[0]:
+            end = Vector2(mouse_pos)
             if self.last_pos:
                 start = Vector2(self.last_pos)
                 self._draw_line(start, end)
