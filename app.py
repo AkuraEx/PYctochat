@@ -34,7 +34,7 @@ class PictoChatApp:
 
         self.chat["bg"] = "pink"
 
-        self.tools.grid(side="left", fill="y", expand=False, padx=10)
+        self.tools.pack(side="left", fill="y", expand=False, padx=10)
         self.chat.pack(
             side="right", anchor="se", fill="x", expand=False, padx=10
         )
