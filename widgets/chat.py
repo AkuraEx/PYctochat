@@ -12,7 +12,7 @@ type AnyPhotoImage = PhotoImage | ImageTk.PhotoImage
 
 class Chat(Frame):
     def __init__(self, master: Misc | None, *args, **kwargs):
-        super().__init__(master, *args, **kwargs)
+        super().__init__(master, *args, background="", **kwargs)
 
         self.messages: list[AnyPhotoImage] = []
         self.labels: list[Label] = []

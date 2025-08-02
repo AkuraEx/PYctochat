@@ -12,9 +12,8 @@ class Keyboard(Frame):
     ):
         super().__init__(master, *args, **kwargs)
 
-        keys = Frame(self, background="white")
+        keys = Frame(self)
         button_container = Frame(self)
-        button_container.config(bg="")
 
         send = Button(button_container, text="Send", command=app.send)
         save = Button(button_container, text="Save", command=app.save)

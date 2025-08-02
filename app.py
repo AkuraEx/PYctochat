@@ -1,6 +1,6 @@
 import pygame
 import os
-from tkinter import Tk
+from tkinter import Label, Tk
 import config as C
 from PIL import Image, ImageTk
 from canvas import PolygonCanvas
@@ -17,7 +17,6 @@ class PictoChatApp:
     def __init__(self, root: Tk):
         self.root = root
         self.root.title("PictoChat P2P")
-        self.root.config(bg="", pady=10)
         self.root.resizable(False, False)
 
         self.root.rowconfigure(0, weight=1, minsize=C.SCREEN_HEIGHT)
@@ -27,26 +26,28 @@ class PictoChatApp:
         self.root.columnconfigure(1, weight=8, minsize=C.SCREEN_WIDTH)
         self.root.columnconfigure(2, weight=4, minsize=C.CHAT_WIDTH)
 
+        res = (root.winfo_screenwidth(), root.winfo_screenheight())
+
+        bg_img = Image.open("assets/bg.png")
+        self.bg_img = ImageTk.PhotoImage(bg_img.resize(res))  # type: ignore
+        self.backdrop = Label(root, image=self.bg_img)
+
         self.embed = Embed(root, **SCREEN_SIZE)
-        # self.embed.propagate(False)
         os.environ["SDL_WINDOWID"] = str(self.embed.canvas_frame.winfo_id())
 
         self.running = True
 
         self.keyboard = Keyboard(root, self, **SCREEN_SIZE)
-        self.keyboard.config(bg="")
-        # self.keyboard.propagate(False)
-
         self.chat = Chat(root, width=C.CHAT_WIDTH)
-        self.chat.config(bg="")
-
         self.tools = Tools(root, self)
-        self.tools.config(bg="")
 
-        self.tools.grid(sticky="ns", column=0, row=0, rowspan=2, padx=10)
-        self.embed.grid(sticky="nsew", column=1, row=0)
-        self.keyboard.grid(sticky="nsew", column=1, row=1)
+        self.tools.grid(
+            sticky="ns", column=0, row=0, rowspan=2, padx=10, pady=10
+        )
+        self.embed.grid(sticky="nsew", column=1, row=0, pady=(10, 0))
+        self.keyboard.grid(sticky="nsew", column=1, row=1, pady=(0, 10))
         self.chat.grid(sticky="s", column=2, row=0, rowspan=2, padx=10)
+        self.backdrop.place(x=-5, y=-5)  # don't ask
 
         self.embed.update()
 
