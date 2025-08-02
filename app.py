@@ -17,35 +17,40 @@ class PictoChatApp:
     def __init__(self, root: Tk):
         self.root = root
         self.root.title("PictoChat P2P")
-        self.root.config(background="gray", pady=10)
+        self.root.config(bg="", pady=10)
+        self.root.resizable(False, False)
+
+        self.root.rowconfigure(0, weight=1, minsize=C.SCREEN_HEIGHT)
+        self.root.rowconfigure(1, weight=1, minsize=C.SCREEN_HEIGHT)
+
+        self.root.columnconfigure(0, weight=1)
+        self.root.columnconfigure(1, weight=8, minsize=C.SCREEN_WIDTH)
+        self.root.columnconfigure(2, weight=4, minsize=C.CHAT_WIDTH)
 
         self.embed = Embed(root, **SCREEN_SIZE)
-        self.embed.pack_propagate(False)
+        # self.embed.propagate(False)
         os.environ["SDL_WINDOWID"] = str(self.embed.canvas_frame.winfo_id())
 
         self.running = True
 
         self.keyboard = Keyboard(root, self, **SCREEN_SIZE)
-        self.keyboard.pack_propagate(False)
+        self.keyboard.config(bg="")
+        # self.keyboard.propagate(False)
 
         self.chat = Chat(root, width=C.CHAT_WIDTH)
+        self.chat.config(bg="")
 
         self.tools = Tools(root, self)
+        self.tools.config(bg="")
 
-        self.chat["bg"] = "pink"
-
-        self.tools.pack(side="left", fill="y", expand=False, padx=10)
-        self.chat.pack(
-            side="right", anchor="se", fill="x", expand=False, padx=10
-        )
-        self.embed.pack(side="top", anchor="nw", fill="y")
-        self.keyboard.pack(side="bottom", anchor="sw", fill="y")
+        self.tools.grid(sticky="ns", column=0, row=0, rowspan=2, padx=10)
+        self.embed.grid(sticky="nsew", column=1, row=0)
+        self.keyboard.grid(sticky="nsew", column=1, row=1)
+        self.chat.grid(sticky="s", column=2, row=0, rowspan=2, padx=10)
 
         self.embed.update()
 
-        self.canvas = PolygonCanvas(
-            C.SCREEN, C.BLACK, C.WHITE, C.LINE_THICKNESS
-        )
+        self.canvas = PolygonCanvas(C.BLACK, C.WHITE, C.LINE_THICKNESS)
 
         self.root.after(10, self.pygame_loop)
 

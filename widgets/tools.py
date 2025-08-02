@@ -26,7 +26,6 @@ class Tools(Frame):
         # Register buttons
         clear = self._register_button("Clear", app.clear, "clear")
         quit = self._register_button("Quit", app.quit, "quit")
-        save = self._register_button("Save", app.save)
         undo = self._register_button("Undo", app.undo, "undo")
         pencil = self._register_button("Pencil", app.pencil, "pencil")
         eraser = self._register_button("Eraser", app.eraser, "eraser")
@@ -37,7 +36,6 @@ class Tools(Frame):
         quit.pack()
         Separator(self, orient="horizontal").pack(fill="x", expand=True)
         undo.pack()
-        save.pack(fill="x")
         Separator(self, orient="horizontal").pack(fill="x", expand=True)
         pencil.pack()
         eraser.pack()

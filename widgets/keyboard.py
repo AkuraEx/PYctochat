@@ -1,5 +1,4 @@
 from tkinter import Button, Frame, Misc
-from tkinter.ttk import Separator
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -15,9 +14,10 @@ class Keyboard(Frame):
 
         keys = Frame(self, background="white")
         button_container = Frame(self)
+        button_container.config(bg="")
 
         send = Button(button_container, text="Send", command=app.send)
-        save = Button(button_container, text="Save")
+        save = Button(button_container, text="Save", command=app.save)
         delete = Button(button_container, text="Delete?")
 
         send.pack(fill="both", expand=True, padx=BTN_PADDING, pady=BTN_PADDING)
@@ -28,4 +28,3 @@ class Keyboard(Frame):
 
         keys.pack(side="left", expand=True, fill="both")
         button_container.pack(side="right", fill="y", expand=False)
-        Separator(self, orient="vertical").pack(side="right", fill="y")

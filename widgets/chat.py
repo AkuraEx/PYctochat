@@ -21,7 +21,8 @@ class Chat(Frame):
 
     def add_image(self, image: AnyPhotoImage):
         assert image.width() == C.CHAT_WIDTH
-        self.messages.append(image)
 
-        label = Label(self, image=self.messages[-1])
-        label.pack()
+        label = Label(self, image=image)
+        label.grid(row=len(self.messages))
+
+        self.messages.append(image)

@@ -1,7 +1,6 @@
 import pygame
 from canvas._base import BaseCanvas, RGBTuple
 import sys
-import config as C
 
 from pygame import Vector2, gfxdraw
 
@@ -9,12 +8,11 @@ from pygame import Vector2, gfxdraw
 class PolygonCanvas(BaseCanvas):
     def __init__(
         self,
-        size: tuple[int, int],
         color: RGBTuple,
         background: RGBTuple,
         thickness: int,
     ) -> None:
-        super().__init__(size, color, background, thickness)
+        super().__init__(color, background, thickness)
 
     def _draw_line(self, start: Vector2, end: Vector2):
         if start == end:

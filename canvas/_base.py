@@ -16,7 +16,6 @@ class BaseCanvas(ABC):
 
     def __init__(
         self,
-        size: tuple[int, int],
         color: RGBTuple,
         background: RGBTuple,
         thickness: int,
@@ -30,7 +29,7 @@ class BaseCanvas(ABC):
         pygame.init()
 
         self.clock = pygame.time.Clock()
-        self.display = pygame.display.set_mode()
+        self.display = pygame.display.set_mode(vsync=True)
         self.surface = pygame.Surface(C.SCREEN)
 
         self.clear()
