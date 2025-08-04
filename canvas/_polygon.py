@@ -2,6 +2,7 @@ import pygame
 from canvas._base import BaseCanvas, RGBTuple
 import sys
 import config as C
+import network
 
 from pygame import Vector2, gfxdraw
 
@@ -68,13 +69,21 @@ class PolygonCanvas(BaseCanvas):
                     if inDrawWindow:
                         self._draw_cap(self._pos_to_rel(event.pos))
                     elif inPostWindow and event.button == 1:
-                        drawing = bytes(self)
+                        drawing = self._pybytes()
                         self.post_list.appendleft((drawing, (C.SCREEN)))
                         self.scroll_distance = 0
                         self.draw_posts()
+
+                        # try sending to peer
+                        try:
+                            print("trying to send to peer")
+                            network.OUTGOING_QUEUE.put(drawing)
+                            print("should b in queue now")
+                        except Exception as e:
+                            print(f"[!] Failed to send: {e}")
                 case pygame.MOUSEBUTTONDOWN:
                     if inDrawWindow:
-                        self.line_stack.push(self.__bytes__())
+                        self.line_stack.push(self._pybytes())
                         self._draw_cap(self._pos_to_rel(event.pos))
                         self.last_pos = self._pos_to_rel(event.pos)
                     # Scroll down button is 4
@@ -98,3 +107,11 @@ class PolygonCanvas(BaseCanvas):
         else:
             self.last_pos = None
             self.last_edge = None
+        try:
+            while not network.INCOMING_QUEUE.empty():
+                new_bytes = network.INCOMING_QUEUE.get_nowait()
+                self.post_list.appendleft((new_bytes, (C.SCREEN)))
+                self.scroll_distance = 0
+                self.draw_posts()
+        except Exception as e:
+            pass  # Ignore if no new data

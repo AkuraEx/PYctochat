@@ -3,6 +3,7 @@ import pygame
 from collections import deque
 from helpers._stack import Stack
 import config as C
+import network
 
 type RGBTuple = tuple[int, int, int]
 
@@ -61,7 +62,7 @@ class BaseCanvas(ABC):
         self.clear()
         self.draw_posts()
 
-    def __bytes__(self):
+    def _pybytes(self):
         return pygame.image.tobytes(self.draw_surface, "RGB")
 
     def _pos_to_rel(self, pos: tuple[int, int]):
@@ -87,17 +88,28 @@ class BaseCanvas(ABC):
         x_pos = C.SCREEN_WIDTH + C.FRAME_WIDTH
         y_pos = C.CANVAS_HEIGHT + self.scroll_distance
         self.clear()
-        # item [0] is the drawing, item [1] is a tuple of its size so we 
-        # can have varying post sizes
         for item in self.post_list:
-            undone = pygame.image.frombytes(item[0], item[1], "RGB")
-            # item [1][1] is the height of the image
+            data = item[0]
+            if isinstance(data, bytearray):
+                data = bytes(data)
+            undone = pygame.image.frombytes(data, item[1], "RGB")
             y_pos -= item[1][1]
             if C.CANVAS_HEIGHT > y_pos:
-                self.main_display.blit(
-                    undone,
-                    (x_pos, y_pos),
-                )
+                self.main_display.blit(undone, (x_pos, y_pos))
+ 
+
+    def receive_drawing(self, read_bytes) -> None:
+        try:
+            while not network.INCOMING_QUEUE.empty():
+                read_drawing = network.INCOMING_QUEUE.get_nowait()
+                read_bytes = bytes(read_drawing)
+                self.post_list.appendleft((read_bytes, (C.SCREEN)))
+                self.draw_posts()
+
+        except Exception as e:
+            print(f"[!] Error receiving drawing: {e}")
+            pass
+
     
 
     @abstractmethod

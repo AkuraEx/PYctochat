@@ -5,6 +5,7 @@ import config as C
 from canvas import PolygonCanvas
 
 
+
 class PictoChatApp:
     def __init__(self, root: Tk):
         self.root = root
