@@ -12,7 +12,6 @@ class BaseCanvas(ABC):
     thickness: int
 
     history: Stack[bytes]
-    post_list: list[bytes]
 
     def __init__(
         self,
