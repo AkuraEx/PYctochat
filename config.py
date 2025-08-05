@@ -10,7 +10,7 @@ CANVAS_HEIGHT = 576
 
 
 SCREEN_WIDTH = 768
-SCREEN_HEIGHT = 258
+SCREEN_HEIGHT = 290
 
 CHAT_WIDTH = 234
 
@@ -25,6 +25,10 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 LINE_THICKNESS = 2
 
+# User Settings
+USERNAME = "riichiMahjong"
+USER_COLOR = "#ff73b2"
+ALT_COLOR = "#fb0071"
 
 # Original ratio: 238 x 172
 # New ratio: 256 x 192

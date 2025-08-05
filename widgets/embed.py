@@ -1,15 +1,16 @@
 from tkinter import Frame, Label, Misc
+import config as c
 
-BORDER = 8
+BORDER = 1
 
 
 class Embed(Frame):
     def __init__(self, master: Misc | None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
-        self.user_color = "#ff73b2"
-        self.alt_color = "#fb0071"
-        self.user_name = "DEEZ"
+        self.user_color = c.USER_COLOR
+        self.alt_color = c.ALT_COLOR
+        self.user_name = c.USERNAME
 
         self.canvas_frame = Frame(
             self,

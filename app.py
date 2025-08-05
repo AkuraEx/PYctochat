@@ -4,6 +4,7 @@ from tkinter import Label, Tk
 import config as C
 from PIL import Image, ImageTk
 from canvas import PolygonCanvas
+from canvas._base import BaseCanvas
 from widgets.chat import Chat
 from widgets.embed import Embed
 from widgets.tools import Tools
@@ -47,7 +48,7 @@ class PictoChatApp:
         self.embed.grid(sticky="nsew", column=1, row=0, pady=(10, 0))
         self.keyboard.grid(sticky="nsew", column=1, row=1, pady=(0, 10))
         self.chat.grid(sticky="s", column=2, row=0, rowspan=2, padx=10)
-        self.backdrop.place(x=-5, y=-5)  # don't ask
+        self.backdrop.place(x=-5, y=-5)  # don't ask # I won't 
 
         self.embed.update()
 
@@ -88,6 +89,7 @@ class PictoChatApp:
         img = Image.frombytes("RGBA", res, bytes(self.canvas))
         scaled = img.resize(new_res, Image.Resampling.NEAREST)  # type: ignore
         self.chat.add_image(ImageTk.PhotoImage(scaled))
+        self.canvas.clear()
 
     def pygame_loop(self):
         if not self.running:

@@ -1,5 +1,6 @@
-from tkinter import Button, Frame, Misc
-from typing import TYPE_CHECKING
+from tkinter import Button, Frame, Misc, PhotoImage
+from typing import TYPE_CHECKING, Callable
+from PIL import Image, ImageTk
 
 if TYPE_CHECKING:
     from app import PictoChatApp
@@ -15,15 +16,24 @@ class Keyboard(Frame):
         keys = Frame(self)
         button_container = Frame(self)
 
-        send = Button(button_container, text="Send", command=app.send)
-        save = Button(button_container, text="Save", command=app.save)
-        delete = Button(button_container, text="Delete?")
+        #  Load icons
+        self.icons: dict[str, PhotoImage] = {}
+        img_send = Image.open("assets/send.png").resize((96, 96), Image.LANCZOS)
+        img_save = Image.open("assets/save.png").resize((96, 96), Image.LANCZOS)
+        img_delete = Image.open("assets/delete.png").resize((96, 96), Image.LANCZOS)
 
-        send.pack(fill="both", expand=True, padx=BTN_PADDING, pady=BTN_PADDING)
-        save.pack(fill="both", expand=True, padx=BTN_PADDING, pady=BTN_PADDING)
-        delete.pack(
-            fill="both", expand=True, padx=BTN_PADDING, pady=BTN_PADDING
-        )
+        self.icons["send"] = ImageTk.PhotoImage(img_send)
+        self.icons["save"] = ImageTk.PhotoImage(img_save)
+        self.icons["delete"] = ImageTk.PhotoImage(img_delete)
+
+        send = Button(button_container, command=app.send, image=self.icons["send"])
+        save = Button(button_container, command=app.save, image=self.icons["save"])
+        delete = Button(button_container, command=app.save, image=self.icons["delete"])
+
+        send.pack(padx=BTN_PADDING)
+        save.pack(padx=BTN_PADDING)
+        delete.pack(padx=BTN_PADDING)
 
         keys.pack(side="left", expand=True, fill="both")
         button_container.pack(side="right", fill="y", expand=False)
+

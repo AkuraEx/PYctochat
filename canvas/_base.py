@@ -31,6 +31,10 @@ class BaseCanvas(ABC):
         self.display = pygame.display.set_mode(vsync=True)
         self.surface = pygame.Surface(C.SCREEN)
 
+        self.chatbox = pygame.transform.scale_by(
+            pygame.image.load("assets/chatbox.png"), 3.25
+        )
+
         self.clear()
 
     def __bytes__(self):
@@ -42,6 +46,7 @@ class BaseCanvas(ABC):
     def clear(self) -> None:
         self.history.reset()
         self.surface.fill((255, 255, 255, 255))
+        self.surface.blit(self.chatbox, (0, 0))
 
     def do_frame(self) -> None:
         self._process_events()
