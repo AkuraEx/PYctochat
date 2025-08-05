@@ -13,6 +13,7 @@ os.chdir(os.path.realpath(os.path.dirname(__file__)))
 pyglet.font.add_directory("assets/font/pixelifysans/static")
 
 root = tk.Tk()
+root.iconbitmap("assets/pictochatlogo.ico") 
 
 
 if __name__ == "__main__":

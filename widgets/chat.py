@@ -1,9 +1,4 @@
-from tkinter import (
-    Frame,
-    Label,
-    Misc,
-    PhotoImage,
-)
+from tkinter import Frame, Label, Scrollbar, Canvas, Misc, PhotoImage
 from PIL import ImageTk
 import config as C
 
@@ -17,12 +12,44 @@ class Chat(Frame):
         self.messages: list[AnyPhotoImage] = []
         self.labels: list[Label] = []
 
+        self.canvas = Canvas(self, width=C.CHAT_WIDTH, height=C.WINDOW_HEIGHT) 
+        self.scrollbar = Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        self.scrollable_frame = Frame(self.canvas)
+        self.canvas_frame = self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+
+        # Bind
+        self.scrollable_frame.bind("<Configure>", self._on_frame_configure)
+        self.canvas.bind("<Configure>", self._on_canvas_configure)
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+
+        # Pack them
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.scrollbar.pack(side="right", fill="y")
+
+
         self.add_image(PhotoImage(file="assets/welcome.png"))
+
+    def _on_frame_configure(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    def _on_canvas_configure(self, event):
+        self.canvas.itemconfig(self.canvas_frame, width=event.width)
+
+    def _on_mousewheel(self, event):
+        self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+
+    def _reset(self):
+        self.canvas.yview_scroll(1, "pages")
 
     def add_image(self, image: AnyPhotoImage):
         assert image.width() == C.CHAT_WIDTH
 
-        label = Label(self, image=image)
-        label.grid(row=len(self.messages))
+        label = Label(self.scrollable_frame, image=image)
+        label.grid(row=len(self.messages), sticky="w")
 
         self.messages.append(image)
+        self.labels.append(label)
+
+        self.after_idle(self._reset)
