@@ -10,20 +10,17 @@ class NaiveCanvas(BaseCanvas):
 
     def __init__(
         self,
-        size: tuple[int, int],
         color: RGBTuple,
         background: RGBTuple,
         thickness: int,
     ) -> None:
-        super().__init__(size, color, background, thickness)
+        super().__init__(color, background, thickness)
         self._mouse_down = False
 
     def _circle_at_event(self, event: Event):
         x, y = event.pos
-        gfxdraw.filled_circle(
-            self.draw_surface, x, y, self.thickness, self.color
-        )
-        gfxdraw.aacircle(self.draw_surface, x, y, self.thickness, self.color)
+        gfxdraw.filled_circle(self.surface, x, y, self.thickness, self.color)
+        gfxdraw.aacircle(self.surface, x, y, self.thickness, self.color)
 
     def _process_events(self) -> None:
         for event in pygame.event.get():

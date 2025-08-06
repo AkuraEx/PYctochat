@@ -10,8 +10,9 @@ CANVAS_HEIGHT = 576
 
 
 SCREEN_WIDTH = 768
-SCREEN_HEIGHT = 258
+SCREEN_HEIGHT = 290
 
+CHAT_WIDTH = 234
 
 
 CANVAS = (CANVAS_WIDTH, CANVAS_HEIGHT)
@@ -22,9 +23,15 @@ GEOMETRY = "1536x576"
 # Drawing
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+RED = (224, 4, 4)
+GREEN = (22, 177, 2)
+BLUE = (36, 0, 240)
 LINE_THICKNESS = 2
 
-
+# User Settings
+USERNAME = "Default"
+USER_COLOR = "#ff73b2"
+ALT_COLOR = "#fb0071"
 
 # Original ratio: 238 x 172
 # New ratio: 256 x 192
