@@ -5,6 +5,7 @@ import config as C
 from PIL import Image, ImageTk
 from canvas import PolygonCanvas
 from canvas._base import BaseCanvas
+import network
 from widgets.chat import Chat
 from widgets.embed import Embed
 from widgets.tools import Tools
@@ -37,6 +38,7 @@ class PictoChatApp:
         os.environ["SDL_WINDOWID"] = str(self.embed.canvas_frame.winfo_id())
 
         self.running = True
+        self.connection = False
 
         self.keyboard = Keyboard(root, self, **SCREEN_SIZE)
         self.chat = Chat(root, width=C.CHAT_WIDTH)
@@ -89,10 +91,21 @@ class PictoChatApp:
         img = Image.frombytes("RGBA", res, bytes(self.canvas))
         scaled = img.resize(new_res, Image.Resampling.NEAREST)  # type: ignore
         self.chat.add_image(ImageTk.PhotoImage(scaled))
+
+        # try sending to peer
+        if network.CONNECTION == True:
+            try:
+                print("trying to send to peer")
+                network.OUTGOING_QUEUE.put(bytes(self.canvas))
+
+            except Exception as e:
+                print(f"Failed to send: {e}")
+
         self.canvas.clear()
 
     def pygame_loop(self):
         if not self.running:
             return
         self.canvas.do_frame()
+        self.chat.receive_drawing()
         self.root.after(10, self.pygame_loop)

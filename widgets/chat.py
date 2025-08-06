@@ -1,9 +1,11 @@
 from tkinter import Frame, Label, Scrollbar, Canvas, Misc, PhotoImage
-from PIL import ImageTk
+from PIL import Image, ImageTk
 import config as C
+import network
 
 type AnyPhotoImage = PhotoImage | ImageTk.PhotoImage
 
+IMG_WIDTH = 234
 
 class Chat(Frame):
     def __init__(self, master: Misc | None, *args, **kwargs):
@@ -53,3 +55,19 @@ class Chat(Frame):
         self.labels.append(label)
 
         self.after_idle(self._reset)
+
+    def receive_drawing(self) -> None:
+
+        try:
+            while not network.INCOMING_QUEUE.empty():
+                read_bytes = network.INCOMING_QUEUE.get_nowait()
+                res = (768, 290)
+                new_res = (IMG_WIDTH, round(IMG_WIDTH * res[1] / res[0]))
+                img = Image.frombytes("RGBA", res, bytes(read_bytes))
+                scaled = img.resize(new_res, Image.Resampling.NEAREST)  # type: ignore
+                self.add_image(ImageTk.PhotoImage(scaled))
+
+        except Exception as e:
+            print(f"Error receiving drawing: {e}")
+            pass
+
