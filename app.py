@@ -79,6 +79,15 @@ class PictoChatApp:
     def eraser(self):
         self.canvas.color = C.WHITE
 
+    def red(self):
+        self.canvas.color = C.RED
+
+    def green(self):
+        self.canvas.color = C.GREEN
+
+    def blue(self):
+        self.canvas.color = C.BLUE
+
     def more(self):
         self.canvas.thickness = C.LINE_THICKNESS + 5
 

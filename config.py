@@ -23,6 +23,9 @@ GEOMETRY = "1536x576"
 # Drawing
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+RED = (224, 4, 4)
+GREEN = (22, 177, 2)
+BLUE = (36, 0, 240)
 LINE_THICKNESS = 2
 
 # User Settings
