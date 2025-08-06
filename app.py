@@ -90,7 +90,7 @@ class PictoChatApp:
         new_res = (IMG_WIDTH, round(IMG_WIDTH * res[1] / res[0]))
         img = Image.frombytes("RGBA", res, bytes(self.canvas))
         scaled = img.resize(new_res, Image.Resampling.NEAREST)  # type: ignore
-        self.chat.add_image(ImageTk.PhotoImage(scaled))
+        self.chat.add_image(ImageTk.PhotoImage(scaled), C.USERNAME)
 
         # try sending to peer
         if network.CONNECTION == True:

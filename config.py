@@ -26,7 +26,7 @@ WHITE = (255, 255, 255)
 LINE_THICKNESS = 2
 
 # User Settings
-USERNAME = "riichiMahjong"
+USERNAME = "Default"
 USER_COLOR = "#ff73b2"
 ALT_COLOR = "#fb0071"
 
