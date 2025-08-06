@@ -2,7 +2,7 @@ import queue
 import multiaddr
 import trio
 import config as c
-import json
+import socket
 
 from libp2p import new_host
 from libp2p.custom_types import TProtocol
@@ -92,7 +92,8 @@ async def write_data(stream: INetStream) -> None:
 
 
 async def run(port: int, destination: str) -> None:
-    listen_addr = multiaddr.Multiaddr(f"/ip4/127.0.0.1/tcp/{port}")
+    ip_address = socket.gethostbyname(socket.gethostname())
+    listen_addr = multiaddr.Multiaddr(f"/ip4/{ip_address}/tcp/{port}")
     host = new_host()
 
     async def stream_handler(stream: INetStream) -> None:
