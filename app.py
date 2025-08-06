@@ -52,6 +52,8 @@ class PictoChatApp:
         self.chat.grid(sticky="s", column=2, row=0, rowspan=2, padx=10)
         self.backdrop.place(x=-5, y=-5)  # don't ask # I won't 
 
+        self.root.bind("<Key>", self.key_handler)
+
         self.embed.update()
 
         self.canvas = PolygonCanvas(C.BLACK, C.WHITE, C.LINE_THICKNESS)
@@ -72,6 +74,12 @@ class PictoChatApp:
 
     def undo(self):
         self.canvas.undo()
+
+    def key_handler(self, event):
+        if event.keysym == 'z':
+            self.undo()
+
+
 
     def pencil(self):
         self.canvas.color = C.BLACK
