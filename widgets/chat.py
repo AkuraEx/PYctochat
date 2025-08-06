@@ -7,6 +7,7 @@ type AnyPhotoImage = PhotoImage | ImageTk.PhotoImage
 
 IMG_WIDTH = 234
 
+
 class Chat(Frame):
     def __init__(self, master: Misc | None, *args, **kwargs):
         super().__init__(master, *args, background="", **kwargs)
@@ -14,12 +15,16 @@ class Chat(Frame):
         self.messages: list[AnyPhotoImage] = []
         self.labels: list[Label] = []
 
-        self.canvas = Canvas(self, width=c.CHAT_WIDTH, height=c.WINDOW_HEIGHT) 
-        self.scrollbar = Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.canvas = Canvas(self, width=c.CHAT_WIDTH, height=c.WINDOW_HEIGHT)
+        self.scrollbar = Scrollbar(
+            self, orient="vertical", command=self.canvas.yview
+        )
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
         self.scrollable_frame = Frame(self.canvas)
-        self.canvas_frame = self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas_frame = self.canvas.create_window(
+            (0, 0), window=self.scrollable_frame, anchor="nw"
+        )
 
         # Bind
         self.scrollable_frame.bind("<Configure>", self._on_frame_configure)
@@ -30,7 +35,6 @@ class Chat(Frame):
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
 
-
         self.add_image(PhotoImage(file="assets/welcome.png"))
 
     def _on_frame_configure(self, event):
@@ -40,18 +44,18 @@ class Chat(Frame):
         self.canvas.itemconfig(self.canvas_frame, width=event.width)
 
     def _on_mousewheel(self, event):
-        self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
     def _reset(self):
         self.canvas.yview_scroll(1, "pages")
 
-    def add_image(self, image: AnyPhotoImage, Username = None):
+    def add_image(self, image: AnyPhotoImage, Username=None):
         assert image.width() == c.CHAT_WIDTH
 
         if Username:
             name = Label(
                 self.scrollable_frame,
-                text= Username,
+                text=Username,
                 background=c.USER_COLOR,
                 foreground=c.ALT_COLOR,
                 highlightbackground=c.ALT_COLOR,
@@ -74,7 +78,6 @@ class Chat(Frame):
         self.after_idle(self._reset)
 
     def receive_drawing(self) -> None:
-
         try:
             while not network.INCOMING_QUEUE.empty():
                 read_bytes = network.INCOMING_QUEUE.get_nowait()
@@ -87,4 +90,3 @@ class Chat(Frame):
         except Exception as e:
             print(f"Error receiving drawing: {e}")
             pass
-

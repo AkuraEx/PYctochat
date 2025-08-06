@@ -2,7 +2,6 @@ import queue
 import multiaddr
 import trio
 import config as c
-import socket
 
 from libp2p import new_host
 from libp2p.custom_types import TProtocol
@@ -40,8 +39,8 @@ async def read_data(stream: INetStream) -> None:
             print(f"Received {len(data)} bytes")
 
             username_len = int.from_bytes(data[:2], "big")
-            username = data[2:2 + username_len].decode("utf-8")
-            image = data[2 + username_len:]
+            username = data[2 : 2 + username_len].decode("utf-8")
+            image = data[2 + username_len :]
 
             print(f"[{username}] Sent image of {len(image)} bytes")
 
@@ -49,8 +48,6 @@ async def read_data(stream: INetStream) -> None:
         except Exception as e:
             print(f"error: {e}")
             break
-
-
 
 
 async def write_data(stream: INetStream) -> None:
@@ -76,7 +73,7 @@ async def write_data(stream: INetStream) -> None:
 
             # Chunking
             while offset < total_len:
-                chunk = full_payload[offset:offset + MAX_CHUNK]
+                chunk = full_payload[offset : offset + MAX_CHUNK]
                 await stream.write(chunk)
                 offset += len(chunk)
 
@@ -86,9 +83,6 @@ async def write_data(stream: INetStream) -> None:
         except Exception as e:
             print(f"error: {e}")
             break
-
-
-
 
 
 async def run(port: int, destination: str) -> None:
@@ -105,7 +99,10 @@ async def run(port: int, destination: str) -> None:
 
     host.set_stream_handler(PROTOCOL_ID, stream_handler)
 
-    async with host.run(listen_addrs=[listen_addr]), trio.open_nursery() as nursery:
+    async with (
+        host.run(listen_addrs=[listen_addr]),
+        trio.open_nursery() as nursery,
+    ):
         if not destination:
             # Server
             print("\nWaiting for incoming connection...")
