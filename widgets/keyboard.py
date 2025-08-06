@@ -1,5 +1,5 @@
 from tkinter import Button, Frame, Misc, PhotoImage
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 from PIL import Image, ImageTk
 
 if TYPE_CHECKING:
@@ -18,9 +18,9 @@ class Keyboard(Frame):
 
         #  Load icons
         self.icons: dict[str, PhotoImage] = {}
-        img_send = Image.open("assets/send.png").resize((96, 96), Image.LANCZOS)
-        img_save = Image.open("assets/save.png").resize((96, 96), Image.LANCZOS)
-        img_delete = Image.open("assets/delete.png").resize((96, 96), Image.LANCZOS)
+        img_send = Image.open("assets/send.png")
+        img_save = Image.open("assets/save.png")
+        img_delete = Image.open("assets/delete.png")
 
         self.icons["send"] = ImageTk.PhotoImage(img_send)
         self.icons["save"] = ImageTk.PhotoImage(img_save)
