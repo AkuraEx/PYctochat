@@ -8,6 +8,7 @@ dependencies = [
     "pillow>=11.3.0",
     "pygame>=2.6.1",
     "pyglet>=2.1.6",
+    "trio>=0.30.0",
 ]
 
 [dependency-groups]
