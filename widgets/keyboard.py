@@ -26,9 +26,15 @@ class Keyboard(Frame):
         self.icons["save"] = ImageTk.PhotoImage(img_save)
         self.icons["delete"] = ImageTk.PhotoImage(img_delete)
 
-        send = Button(button_container, command=app.send, image=self.icons["send"])
-        save = Button(button_container, command=app.save, image=self.icons["save"])
-        delete = Button(button_container, command=app.save, image=self.icons["delete"])
+        send = Button(
+            button_container, command=app.send, image=self.icons["send"]
+        )
+        save = Button(
+            button_container, command=app.save, image=self.icons["save"]
+        )
+        delete = Button(
+            button_container, command=app.save, image=self.icons["delete"]
+        )
 
         send.pack(padx=BTN_PADDING)
         save.pack(padx=BTN_PADDING)
@@ -36,4 +42,3 @@ class Keyboard(Frame):
 
         keys.pack(side="left", expand=True, fill="both")
         button_container.pack(side="right", fill="y", expand=False)
-

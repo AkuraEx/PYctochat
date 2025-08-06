@@ -20,24 +20,26 @@ pyglet.font.add_directory("assets/font/pixelifysans/static")
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", default=0, type=int)
 parser.add_argument("-d", "--destination", type=str)
-parser.add_argument("-n", "--name", type = str)
-parser.add_argument("-c", "--color", type = str)
+parser.add_argument("-n", "--name", type=str)
+parser.add_argument("-c", "--color", type=str)
 args = parser.parse_args()
 
-if(args.name):
+if args.name:
     c.USERNAME = args.name
-if(args.color == "blue"):
+if args.color == "blue":
     c.USER_COLOR, c.ALT_COLOR = "#0082fb", "#2400f0"
-if(args.color == "green"):
+if args.color == "green":
     c.USER_COLOR, c.ALT_COLOR = "#4fda6d", "#16b102"
-if(args.color == "red"):
+if args.color == "red":
     c.USER_COLOR, c.ALT_COLOR = "#e45d5d", "#e00404"
 
 root = tk.Tk()
-root.iconbitmap("assets/pictochatlogo.ico") 
+root.iconbitmap("assets/pictochatlogo.ico")
+
 
 def start_trio_network():
     trio.run(run, args.port, args.destination)
+
 
 if __name__ == "__main__":
     threading.Thread(target=start_trio_network, daemon=True).start()
