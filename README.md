@@ -15,6 +15,16 @@ This application is a recreation of the HIT Nintendo DS messaging program known 
 ![App Screenshot 2](https://raw.githubusercontent.com/AkuraEx/PYctochat/refs/heads/main/assets/awesomeScreenshot2.png)
 
 
+## Dependencies
+- LibP2P
+- Multiaddr
+- Pillow
+- Pygame
+- Pyglet
+- Tkinter
+- Trio
+
+
 ## How To Run
 
 There are 4 command line arguments:
