@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Callable
 if TYPE_CHECKING:
     from app import PictoChatApp
 
-
 class Tools(Frame):
     def __init__(
         self, master: Misc | None, app: "PictoChatApp", *args, **kwargs

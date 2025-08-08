@@ -17,6 +17,9 @@ os.chdir(os.path.realpath(os.path.dirname(__file__)))
 
 pyglet.font.add_directory("assets/font/pixelifysans/static")
 
+# Command Line arguments:
+# -p specifies port number, -d specifies destination client is connecting to
+# -n specifies username, -c specifies color them for user
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", default=0, type=int)
 parser.add_argument("-d", "--destination", type=str)
@@ -33,15 +36,20 @@ if args.color == "green":
 if args.color == "red":
     c.USER_COLOR, c.ALT_COLOR = "#e45d5d", "#e00404"
 
+# Tkinter init
 root = tk.Tk()
 root.iconbitmap("assets/pictochatlogo.ico")
 
 
 def start_trio_network():
+    # Trio flavored async function
     trio.run(run, args.port, args.destination)
 
 
 if __name__ == "__main__":
+    # Network thread in the background
     threading.Thread(target=start_trio_network, daemon=True).start()
+
+    # Main app
     app = PictoChatApp(root)
     root.mainloop()

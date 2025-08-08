@@ -5,7 +5,6 @@ import config as C
 
 type RGBTuple = tuple[int, int, int]
 
-
 class BaseCanvas(ABC):
     color: RGBTuple
     background: RGBTuple
@@ -23,6 +22,7 @@ class BaseCanvas(ABC):
         self.background = background
         self.thickness = thickness
 
+        # Chat History
         self.history = Stack()
 
         pygame.init()

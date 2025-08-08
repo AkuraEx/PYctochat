@@ -7,6 +7,9 @@ if TYPE_CHECKING:
 BTN_PADDING = 4
 
 
+# Keyboard Class
+# Future implementation would add a keyboard that lets
+# you type on the canvas
 class Keyboard(Frame):
     def __init__(
         self, master: Misc | None, app: "PictoChatApp", *args, **kwargs

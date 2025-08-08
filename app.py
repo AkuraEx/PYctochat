@@ -14,8 +14,10 @@ SCREEN_SIZE = {"width": C.SCREEN_WIDTH, "height": C.SCREEN_HEIGHT}
 IMG_WIDTH = 234
 
 
+# Main Tkinter Frame Class
 class PictoChatApp:
     def __init__(self, root: Tk):
+        # A lot of tkinter window setup in here
         self.root = root
         self.root.title("PictoChat P2P")
         self.root.resizable(False, False)
@@ -33,11 +35,12 @@ class PictoChatApp:
         self.bg_img = ImageTk.PhotoImage(bg_img.resize(res))  # type: ignore
         self.backdrop = Label(root, image=self.bg_img)
 
-        self.embed = Embed(root, **SCREEN_SIZE)
-        os.environ["SDL_WINDOWID"] = str(self.embed.canvas_frame.winfo_id())
-
         self.running = True
         self.connection = False
+
+        # Widgets
+        self.embed = Embed(root, **SCREEN_SIZE)
+        os.environ["SDL_WINDOWID"] = str(self.embed.canvas_frame.winfo_id())
 
         self.keyboard = Keyboard(root, self, **SCREEN_SIZE)
         self.chat = Chat(root, width=C.CHAT_WIDTH)
@@ -49,16 +52,19 @@ class PictoChatApp:
         self.embed.grid(sticky="nsew", column=1, row=0, pady=(10, 0))
         self.keyboard.grid(sticky="nsew", column=1, row=1, pady=(0, 10))
         self.chat.grid(sticky="s", column=2, row=0, rowspan=2, padx=10)
-        self.backdrop.place(x=-5, y=-5)  # don't ask # I won't
+        self.backdrop.place(x=-5, y=-5)
 
         self.root.bind("<Key>", self.key_handler)
 
         self.embed.update()
 
+        # PyGame Canvas initialized here
         self.canvas = PolygonCanvas(C.BLACK, C.WHITE, C.LINE_THICKNESS)
 
         self.root.after(10, self.pygame_loop)
 
+
+    # Main App Methods:
     def clear(self):
         self.canvas.clear()
 
@@ -77,8 +83,6 @@ class PictoChatApp:
     def key_handler(self, event):
         if event.keysym == 'z':
             self.undo()
-
-
 
     def pencil(self):
         self.canvas.color = C.BLACK
@@ -109,6 +113,7 @@ class PictoChatApp:
         self.chat.add_image(ImageTk.PhotoImage(scaled), C.USERNAME)
 
         # try sending to peer
+        # If a connection has been established
         if network.CONNECTION == True:
             try:
                 print("trying to send to peer")
@@ -117,8 +122,10 @@ class PictoChatApp:
             except Exception as e:
                 print(f"Failed to send: {e}")
 
+        # clear canvas after drawing has been posted
         self.canvas.clear()
 
+    # While running will constantly updates frames and check for drawings in incoming queue
     def pygame_loop(self):
         if not self.running:
             return

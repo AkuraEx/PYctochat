@@ -4,7 +4,8 @@ import sys
 
 from pygame import Vector2, gfxdraw
 
-
+# We specifically use the polygon canvas which
+# is responsible for line smoothing and drawing logic
 class PolygonCanvas(BaseCanvas):
     def __init__(
         self,

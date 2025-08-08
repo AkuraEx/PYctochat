@@ -1,3 +1,5 @@
+# Main Config file for storing various app presets
+
 # 1470 is 1428 + Frame Width
 # Window
 WINDOW_WIDTH = 1536
